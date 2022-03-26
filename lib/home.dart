@@ -1,6 +1,9 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:monumento/d_b_icons_icons.dart';
+import 'package:monumento/shared/components/bottomBar.dart';
+import 'package:monumento/shared/components/neumorphism.dart';
 
 class Home extends StatelessWidget {
 
@@ -8,16 +11,28 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(DBIcons.menu),
-        title: Text(
-          'Monumento'
+        leading: neumorphicButton(
+          child: Icon(DBIcons.menu, size: 28,),
+          prColor: Colors.brown.shade500,
+          sdColor: Colors.brown.shade600),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 6),
+          child: Text(
+            'Monumento'
+          ),
         ),
+        toolbarHeight: 65,
+        leadingWidth: 80,
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Icon(DBIcons.search),
+            child: neumorphicButton(
+          child: Icon(DBIcons.search,),
+          prColor: Colors.brown.shade500,
+          sdColor: Colors.brown.shade600),
           )
         ],
+        backgroundColor: Colors.brown[500],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -85,24 +100,10 @@ class Home extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: ConvexAppBar(
-        items: [ 
-          TabItem(
-            icon: DBIcons.augmented_reality,
-            title: 'Camera'
-          ),
-          TabItem(
-            icon: Icons.home_filled,
-            title: 'Home'
-          ),
-          TabItem(
-            icon: DBIcons.map,
-            title: 'Maps'
-          )
-        ],
-        initialActiveIndex: 0,
-        onTap: (int i) => print('Tab $i'),
-      ),
+      backgroundColor: Colors.white,
+      bottomNavigationBar: ConvexBottomBar(
+        backgroundColor: Colors.brown[500]
+      )
     );
   }
 }
