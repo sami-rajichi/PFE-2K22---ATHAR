@@ -1,12 +1,14 @@
-import 'dart:html';
-
+// import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:monumento/components/categories/buildCategoryPage.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/constants/monuments_description.dart';
+import 'package:monumento/d_b_icons_icons.dart';
 import 'package:monumento/shared/components/concaveCard.dart';
+import 'package:monumento/shared/components/menu_widget.dart';
 import 'package:monumento/shared/components/neumorphism.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -24,6 +26,22 @@ class _LiquidSwipeNavigatorState extends State<LiquidSwipeNavigator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        leadingWidth: 18,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Container(
+          margin: EdgeInsets.only(left: 2),
+          child: IconButton(
+            onPressed: (() {
+              ZoomDrawer.of(context)!.toggle();
+            }),
+            icon: Icon(Icons.arrow_back), 
+            iconSize: 20,
+            color: Colors.black,),
+        ),
+      ),
       body: Stack(
         children: [
           LiquidSwipe(

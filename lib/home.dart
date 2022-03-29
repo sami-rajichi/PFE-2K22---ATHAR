@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:monumento/d_b_icons_icons.dart';
 import 'package:monumento/shared/components/bottomBar.dart';
+import 'package:monumento/shared/components/menu_widget.dart';
 import 'package:monumento/shared/components/neumorphism.dart';
 
 class Home extends StatelessWidget {
@@ -11,28 +12,21 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: neumorphicButton(
-          child: Icon(DBIcons.menu, size: 28,),
-          prColor: Colors.brown.shade500,
-          sdColor: Colors.brown.shade600),
-        title: Padding(
-          padding: const EdgeInsets.only(left: 6),
-          child: Text(
-            'Monumento'
-          ),
+        leading: MenuWidget(),
+        title: Text(
+          'Monumento'
         ),
-        toolbarHeight: 65,
-        leadingWidth: 80,
+        // toolbarHeight: 65,
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: neumorphicButton(
           child: Icon(DBIcons.search,),
-          prColor: Colors.brown.shade500,
-          sdColor: Colors.brown.shade600),
+          prColor: Colors.indigo.shade500,
+          sdColor: Colors.indigo.shade800),
           )
         ],
-        backgroundColor: Colors.brown[500],
+        backgroundColor: Colors.indigo[500],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -102,7 +96,7 @@ class Home extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       bottomNavigationBar: ConvexBottomBar(
-        backgroundColor: Colors.brown[500]
+        backgroundColor: Colors.indigo[500]
       )
     );
   }

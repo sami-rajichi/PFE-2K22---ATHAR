@@ -5,8 +5,8 @@ Widget neumorphicButton({
   required Color? prColor,
   required Color? sdColor,
   required Widget? child,
-  EdgeInsets padding = const EdgeInsets.all(15),
-  double depth = 2,
+  EdgeInsets padding = const EdgeInsets.all(10),
+  double depth = 0,
   NeumorphicBoxShape boxShape = const NeumorphicBoxShape.circle(),
 }) =>
     Container(
@@ -26,7 +26,7 @@ Widget neumorphicButton({
           onPressed: () {},
           style: NeumorphicStyle(
             color: prColor,
-            depth: 10,
+            depth: 0.5,
             intensity: 0.8,
             shape: NeumorphicShape.convex,
             boxShape: boxShape,
