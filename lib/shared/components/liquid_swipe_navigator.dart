@@ -12,8 +12,48 @@ import 'package:monumento/shared/components/menu_widget.dart';
 import 'package:monumento/shared/components/neumorphism.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+Map<String, List<CategoryPage>> catPage = {
+  'nord': [
+    CategoryPage(
+      country: 'carthage-amphi',
+      region: 'north',
+      image: 'assets/Categories/carthage.png',
+      title: "L'amphithéâtre de Carthage",
+      location: 'Carthage, Tunis',
+      subtitle1: 'Dimensions externes',
+      subtitle2: 'Dimensions de l’arène',
+      subtitle3: 'Capacité',
+    ),
+    CategoryPage(
+      country: 'aqueduc-zaghouan',
+      region: 'north',
+      image: 'assets/Categories/aqueduc.png',
+      title: "L'aqueduc de Zaghouan",
+      location: 'Zaghouan-Carthage',
+      subtitle1: 'Longueur',
+      subtitle2: 'Usage',
+      subtitle3: 'Année début travaux',
+    ),
+  ],
+  'centre': [
+    CategoryPage(
+      country: 'el-jem',
+      region: 'middle',
+      image: 'assets/Categories/el-jem.jpg',
+      title: "L'amphithéâtre d'El Jem",
+      location: 'El-Jem, Mahdia',
+      subtitle1: 'Dimensions externes',
+      subtitle2: 'Dimensions de l’arène',
+      subtitle3: 'Capacité',
+    ),
+  ]
+};
+
 class LiquidSwipeNavigator extends StatefulWidget {
-  const LiquidSwipeNavigator({Key? key}) : super(key: key);
+  final String? region;
+
+  LiquidSwipeNavigator({Key? key, 
+  required this.region}) : super(key: key);
 
   @override
   State<LiquidSwipeNavigator> createState() => _LiquidSwipeNavigatorState();
@@ -21,8 +61,8 @@ class LiquidSwipeNavigator extends StatefulWidget {
 
 class _LiquidSwipeNavigatorState extends State<LiquidSwipeNavigator> {
   final controller = LiquidController();
-  final len = count;
-  
+  late final len = catPage[widget.region]?.length;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,11 +75,12 @@ class _LiquidSwipeNavigatorState extends State<LiquidSwipeNavigator> {
           margin: EdgeInsets.only(left: 2),
           child: IconButton(
             onPressed: (() {
-              ZoomDrawer.of(context)!.toggle();
+              Navigator.pop(context);
             }),
-            icon: Icon(Icons.arrow_back), 
+            icon: Icon(Icons.arrow_back),
             iconSize: 20,
-            color: Colors.black,),
+            color: Colors.black,
+          ),
         ),
       ),
       body: Stack(
@@ -55,36 +96,8 @@ class _LiquidSwipeNavigatorState extends State<LiquidSwipeNavigator> {
               setState(() {});
             },
             pages: [
-              CategoryPage(
-                country: 'el-jem',
-                region: 'middle',
-                image: 'assets/Categories/el-jem.jpg',
-                title: "L'amphithéâtre d'El Jem",
-                location: 'El-Jem, Mahdia',
-                subtitle1: 'Dimensions externes',
-                subtitle2: 'Dimensions de l’arène',
-                subtitle3: 'Capacité',
-              ),
-              CategoryPage(
-                country: 'carthage-amphi',
-                region: 'north',
-                image: 'assets/Categories/carthage.png',
-                title: "L'amphithéâtre de Carthage",
-                location: 'Carthage, Tunis',
-                subtitle1: 'Dimensions externes',
-                subtitle2: 'Dimensions de l’arène',
-                subtitle3: 'Capacité',
-              ),
-              CategoryPage(
-                country: 'aqueduc-zaghouan',
-                region: 'north',
-                image: 'assets/Categories/aqueduc.png',
-                title: "L'aqueduc de Zaghouan",
-                location: 'Zaghouan-Carthage',
-                subtitle1: 'Longueur',
-                subtitle2: 'Usage',
-                subtitle3: 'Année début travaux',
-              ),
+              for (CategoryPage cat in catPage[widget.region]!)
+                cat
             ],
           ),
           Positioned(
@@ -106,9 +119,10 @@ class _LiquidSwipeNavigatorState extends State<LiquidSwipeNavigator> {
                               Colors.transparent),
                         ),
                         onPressed: () {
+                          print(len);
                           final page = controller.currentPage - 1;
                           controller.animateToPage(
-                              page: page < 0 ? len-1 : page, duration: 400);
+                              page: page < 0 ? len! - 1 : page, duration: 400);
                         },
                         child: Text(
                           'PREC',
@@ -117,7 +131,7 @@ class _LiquidSwipeNavigatorState extends State<LiquidSwipeNavigator> {
                       )),
                   AnimatedSmoothIndicator(
                     activeIndex: controller.currentPage,
-                    count: len,
+                    count: len!,
                     effect: WormEffect(
                         spacing: 15,
                         dotColor: grey300,
@@ -138,10 +152,9 @@ class _LiquidSwipeNavigatorState extends State<LiquidSwipeNavigator> {
                               Colors.transparent),
                         ),
                         onPressed: () {
-                          
                           final page = controller.currentPage + 1;
                           controller.animateToPage(
-                              page: page > len ? 0 : page, duration: 400);
+                              page: page > len! ? 0 : page, duration: 400);
                         },
                         child: Text(
                           'SUIV',

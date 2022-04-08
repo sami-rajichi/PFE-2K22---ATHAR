@@ -1,5 +1,9 @@
+// ignore_for_file: dead_code
+
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:monumento/components/categories/buildCategoryPage.dart';
+import 'package:monumento/components/categories/categories_home.dart';
 import 'package:monumento/components/menu/menu_page.dart';
 import 'package:monumento/home.dart';
 import 'package:monumento/models/menu_item.dart';
@@ -22,43 +26,37 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         showShadow: true,
         backgroundColor: Color.fromRGBO(251, 192, 45, 1),
         style: DrawerStyle.Style1,
+        openCurve: Curves.fastOutSlowIn,
+        duration: Duration(milliseconds: 500),
+        mainScreen: getScreen(),
         menuScreen: Builder(
           builder: (context) => MenuPage(
             currentItem: currentItem,
             onSelectedItem: (item) {
-              setState(() {
-                currentItem = item;
-                ZoomDrawer.of(context)!.close();
-              });
+              setState(() => currentItem = item);
+              ZoomDrawer.of(context)!.close();
             },
           ),
         ),
-        mainScreen: getItem());
+      );
   }
 
-  getItem() {
+  dynamic getScreen() {
     switch (currentItem) {
       case MenuItems.home:
         return Home();
-        break;
       case MenuItems.map:
         return Home();
-        break;
       case MenuItems.ar:
         return Home();
-        break;
       case MenuItems.category:
-        return LiquidSwipeNavigator();
-        break;
+        return HomeCategories();
       case MenuItems.help:
         return Home();
-        break;
       case MenuItems.update:
         return Home();
-        break;
       case MenuItems.aboutUs:
         return Home();
-        break;
     }
   }
 }

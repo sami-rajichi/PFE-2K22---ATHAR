@@ -24,10 +24,11 @@ class MenuItems {
 
 class MenuPage extends StatelessWidget {
 
-  final MenuItem? currentItem;
-  final ValueChanged<MenuItem>? onSelectedItem;
+  final MenuItem currentItem;
+  final ValueChanged<MenuItem> onSelectedItem;
 
-  const MenuPage({ Key? key, this.currentItem, this.onSelectedItem }) : super(key: key);
+  const MenuPage({ Key? key, 
+  required this.currentItem, required this.onSelectedItem }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,7 @@ class MenuPage extends StatelessWidget {
     );
   }
 
-  buildItem(MenuItem e) => ListTileTheme(
+  Widget buildItem(MenuItem e) => ListTileTheme(
     selectedColor: Colors.white,
     child: ListTile(
       selected: currentItem == e,
@@ -58,7 +59,7 @@ class MenuPage extends StatelessWidget {
       minLeadingWidth: 20,
       leading: Icon(e.icon),
       title: Text(e.text),
-      onTap: () => onSelectedItem!(e),
+      onTap: () => onSelectedItem(e),
     ),
   );
 }
