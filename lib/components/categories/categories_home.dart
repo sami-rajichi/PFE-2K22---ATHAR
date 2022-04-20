@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:monumento/constants/colors.dart';
 import 'package:monumento/d_b_icons_icons.dart';
 import 'package:monumento/shared/components/bottomBar.dart';
 import 'package:monumento/shared/components/liquid_swipe_navigator.dart';
@@ -20,6 +21,12 @@ class _HomeCategoriesState extends State<HomeCategories> {
     'centre': 'assets/map/centre.png',
     'sud': 'assets/map/sud.png',
   };
+  Color color = Colors.grey;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,61 +34,42 @@ class _HomeCategoriesState extends State<HomeCategories> {
         appBar: AppBar(
           leading: MenuWidget(),
           title: Text('Monumento'),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: neumorphicButton(
-                  child: Icon(
-                    DBIcons.search,
-                  ),
-                  prColor: Colors.indigo.shade500,
-                  sdColor: Colors.indigo.shade800),
-            )
-          ],
-          backgroundColor: Colors.indigo[500],
+          backgroundColor: AppColors.mainColor,
+          centerTitle: true,
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              child: GestureDetector(
-                  child: Image.asset(
-                    'assets/map/nord4.png',
-                    height: 140,
-                    fit: BoxFit.cover,
+        body: Center(
+          child: Stack(
+            children: [
+              InkWell(
+                highlightColor: Colors.indigo.withOpacity(0.3),
+                splashColor: Colors.indigo.withOpacity(0.5),
+                onTap: () {
+                  setState(() {
+                    color = Colors.indigo.withOpacity(0.3);
+                  });
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              LiquidSwipeNavigator(region: 'nord')));
+                },
+                child: Container(
+                  child: Ink(
+                    child: Image.asset(
+                      'assets/map/nord.png',
+                      height: 500,
+                      fit: BoxFit.cover,
+                      color: color,
+                    ),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                LiquidSwipeNavigator(region: 'nord')));
-                  }),
-            ),
-            Container(
-              transform: Matrix4.translationValues(0, -52, 0),
-              child: GestureDetector(
+                ),
+              ),
+              GestureDetector(
                   child: Image.asset(
-                    'assets/map/centre4.png',
-                    height: 160,
+                    'assets/map/center.png',
+                    height: 500,
                     fit: BoxFit.cover,
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                LiquidSwipeNavigator(region: 'centre')));
-                  }),
-            ),
-            Container(
-              transform: Matrix4.translationValues(0, -52, 0),
-              child: GestureDetector(
-                  child: Image.asset(
-                    'assets/map/sud4.png',
-                    height: 160,
-                    fit: BoxFit.cover,
+                    color: Colors.grey,
                   ),
                   onTap: () {
                     Navigator.push(
@@ -90,10 +78,35 @@ class _HomeCategoriesState extends State<HomeCategories> {
                             builder: (context) =>
                                 LiquidSwipeNavigator(region: 'centre')));
                   }),
-            ),
-          ],
+              InkWell(
+                highlightColor: Colors.indigo.withOpacity(0.3),
+                splashColor: Colors.indigo.withOpacity(0.5),
+                onTap: () {
+                  setState(() {
+                    color = Colors.indigo.withOpacity(0.3);
+                  });
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              LiquidSwipeNavigator(region: 'nord')));
+                },
+                child: Ink(
+                  child: Image.asset(
+                    'assets/map/sud.png',
+                    height: 500,
+                    fit: BoxFit.cover,
+                    color: color,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         bottomNavigationBar:
-            ConvexBottomBar(backgroundColor: Colors.indigo[500]));
+            ConvexBottomBar(
+              backgroundColor: AppColors.mainColor
+        )
+      );
   }
 }

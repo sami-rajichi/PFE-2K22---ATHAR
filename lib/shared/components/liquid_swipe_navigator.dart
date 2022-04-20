@@ -23,6 +23,7 @@ Map<String, List<CategoryPage>> catPage = {
       subtitle1: 'Dimensions externes',
       subtitle2: 'Dimensions de l’arène',
       subtitle3: 'Capacité',
+      url: "https://fr.wikipedia.org/wiki/Amphithéâtre_de_Carthage",
     ),
     CategoryPage(
       country: 'aqueduc-zaghouan',

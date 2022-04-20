@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +9,7 @@ import 'package:monumento/shared/components/concaveCard.dart';
 import 'package:monumento/shared/components/description.dart';
 import 'package:monumento/shared/components/neumorphic_image.dart';
 import 'package:monumento/shared/components/neumorphism.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class CategoryPage extends StatefulWidget {
   final String? title;
@@ -19,6 +22,7 @@ class CategoryPage extends StatefulWidget {
   final String? country;
   final Color? color;
   final Color? backgroundColor;
+  final String? url;
 
   CategoryPage({
     Key? key, 
@@ -29,6 +33,7 @@ class CategoryPage extends StatefulWidget {
     this.country, 
     this.subtitle1, this.subtitle2, this.subtitle3,
     this.color = grey300, this.backgroundColor = grey400,
+    this.url
     }) : super(key: key);
 
   @override
@@ -37,6 +42,12 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
 
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,13 +143,17 @@ class _CategoryPageState extends State<CategoryPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             neumorphicButton(
+                        
                                 prColor: widget.color,
                                 sdColor: widget.color,
                                 boxShape: NeumorphicBoxShape.roundRect(
                                     BorderRadius.circular(8)),
-                                child: Text(
-                                  'Read more',
-                                  style: TextStyle(color: Colors.black),
+                                child: GestureDetector(
+                                  onTap: (() => popUpWebView(context)),
+                                  child: Text(
+                                    'Read more',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                                 )),
                             neumorphicButton(
                                 prColor: widget.color,
@@ -146,9 +161,10 @@ class _CategoryPageState extends State<CategoryPage> {
                                 boxShape: NeumorphicBoxShape.roundRect(
                                     BorderRadius.circular(8)),
                                 child: Text(
-                                  'Show In Map',
-                                  style: TextStyle(color: Colors.black),
-                                )),
+                                    'Show In Map',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
                           ],
                         )
                       ],
@@ -164,4 +180,16 @@ class _CategoryPageState extends State<CategoryPage> {
       backgroundColor: widget.backgroundColor,
     );
   }
+
+  popUpWebView(BuildContext context) => showDialog(
+    context: context, 
+    builder: (_) => AlertDialog(
+      content: WebView(
+        javascriptMode: JavascriptMode.unrestricted,
+        initialUrl: widget.url,
+        // onWebViewCreated: (wvc){
+        //   _controller.complete(wvc);
+        // },
+      ),
+    ));
 }

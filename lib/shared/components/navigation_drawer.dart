@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/components/categories/buildCategoryPage.dart';
 import 'package:monumento/components/categories/categories_home.dart';
 import 'package:monumento/components/menu/menu_page.dart';
@@ -48,7 +49,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       case MenuItems.map:
         return Home();
       case MenuItems.ar:
-        return Home();
+        return ArUs();
       case MenuItems.category:
         return HomeCategories();
       case MenuItems.help:
