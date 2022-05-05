@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monumento/components/authentication/sign_in.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/home.dart';
 import 'package:monumento/shared/components/navigation_drawer.dart';
@@ -61,7 +62,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         SizedBox(height: 40),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context, 
                               MaterialPageRoute(
                                 builder: (context) => NavigationDrawer()));

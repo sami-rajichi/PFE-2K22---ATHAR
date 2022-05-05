@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:monumento/constants/colors.dart';
 
 Widget description({
   String subtitle = '',
@@ -11,9 +12,9 @@ Widget description({
       text: TextSpan(
           text: '${subtitle}',
           style: TextStyle(
-              color: Colors.black, 
+              color: AppColors.bigTextColor, 
               fontSize: 15, 
-              fontWeight: FontWeight.w600),
+              fontWeight: FontWeight.w900),
           children: [
             TextSpan(
                 text: "${text}", 

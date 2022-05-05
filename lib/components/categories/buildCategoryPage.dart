@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:monumento/constants/colors.dart';
-import 'package:monumento/constants/monuments_description.dart';
 import 'package:monumento/shared/components/concaveCard.dart';
 import 'package:monumento/shared/components/description.dart';
 import 'package:monumento/shared/components/neumorphic_image.dart';
@@ -12,10 +11,14 @@ import 'package:monumento/shared/components/neumorphism.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class CategoryPage extends StatefulWidget {
-  final String? title;
+  final String? name;
+  final String? info;
   final String? subtitle1;
   final String? subtitle2;
   final String? subtitle3;
+  final String? subtitle1Value;
+  final String? subtitle2Value;
+  final String? subtitle3Value;
   final String? location;
   final String? image;
   final String? region;
@@ -26,14 +29,18 @@ class CategoryPage extends StatefulWidget {
 
   CategoryPage({
     Key? key, 
-    this.title, 
+    this.name, 
     this.location, 
     this.image, 
     this.region, 
     this.country, 
     this.subtitle1, this.subtitle2, this.subtitle3,
-    this.color = grey300, this.backgroundColor = grey400,
-    this.url
+    this.color = grey400, 
+    this.backgroundColor = grey400,
+    this.url, 
+    this.subtitle1Value, 
+    this.subtitle2Value, this.subtitle3Value, 
+    this.info
     }) : super(key: key);
 
   @override
@@ -59,20 +66,22 @@ class _CategoryPageState extends State<CategoryPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(widget.title!,
+                Text(widget.name!,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.lobster(
                       fontSize: 25,
+                      color: AppColors.bigTextColor
                     )),
                 SizedBox(
                   height: 25,
                 ),
                 Flexible(
                   child: neumorphicImage(
-                      color: widget.color,
+                      color: Colors.grey[400],
                       image: Image(
                         image: AssetImage(widget.image!),
                         fit: BoxFit.fill,
+                        height: 250,
                       )),
                 ),
                 SizedBox(
@@ -114,26 +123,26 @@ class _CategoryPageState extends State<CategoryPage> {
                       children: [
                         description(
                             subtitle: widget.subtitle1! + ': ',
-                            text: descriptions[widget.region][widget.country][1]),
+                            text: widget.subtitle1Value!),
                         SizedBox(
                           height: 5,
                         ),
                         description(
                             subtitle: widget.subtitle2! + ': ',
-                            text: descriptions[widget.region][widget.country][2]),
+                            text: widget.subtitle2Value!),
                         SizedBox(
                           height: 5,
                         ),
                         description(
                             subtitle: widget.subtitle3! + ': ',
-                            text: descriptions[widget.region][widget.country][3]),
+                            text: widget.subtitle3Value!),
                         SizedBox(
                           height: 5,
                         ),
                         Container(
                           width: 600,
                           child: description(
-                            text: descriptions[widget.region][widget.country][0],
+                            text: widget.info!,
                           ),
                         ),
                         SizedBox(
@@ -144,10 +153,10 @@ class _CategoryPageState extends State<CategoryPage> {
                           children: [
                             neumorphicButton(
                         
-                                prColor: widget.color,
+                                prColor: Color.fromRGBO(189, 189, 189, 1).withOpacity(0.6),
                                 sdColor: widget.color,
                                 boxShape: NeumorphicBoxShape.roundRect(
-                                    BorderRadius.circular(8)),
+                                    BorderRadius.circular(6)),
                                 child: GestureDetector(
                                   onTap: (() => popUpWebView(context)),
                                   child: Text(
@@ -156,10 +165,10 @@ class _CategoryPageState extends State<CategoryPage> {
                                   ),
                                 )),
                             neumorphicButton(
-                                prColor: widget.color,
+                                prColor: Color.fromRGBO(189, 189, 189, 1).withOpacity(0.6),
                                 sdColor: widget.color,
                                 boxShape: NeumorphicBoxShape.roundRect(
-                                    BorderRadius.circular(8)),
+                                    BorderRadius.circular(6)),
                                 child: Text(
                                     'Show In Map',
                                     style: TextStyle(color: Colors.black),
@@ -177,7 +186,7 @@ class _CategoryPageState extends State<CategoryPage> {
           ),
         ),
       ),
-      backgroundColor: widget.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
     );
   }
 

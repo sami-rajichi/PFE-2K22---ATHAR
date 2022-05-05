@@ -16,7 +16,7 @@ Widget neumorphicButton({
         style: NeumorphicStyle(
           color: sdColor,
           depth: depth,
-          intensity: 0.6,
+          intensity: 0.8,
           shape: NeumorphicShape.flat,
           boxShape: boxShape,
         ),

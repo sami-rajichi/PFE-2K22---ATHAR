@@ -10,22 +10,24 @@ import 'package:monumento/shared/components/liquid_swipe_navigator.dart';
 import 'package:monumento/shared/components/navigation_drawer.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-// Future main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-//   await Firebase.initializeApp(
-//     options: FirebaseOptions(
-//       apiKey: "AIzaSyD4nDMMhzUyFpcc_OM94TGWIOCsCSDeB5A",
-//       appId: "1:846144714798:android:de1dbb38a299bfd781c7bf",
-//       messagingSenderId: "846144714798",
-//       projectId: "monumento-2k22",
-//     ),
-//   );
-//   runApp(MyApp());
-// }
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: "AIzaSyD4nDMMhzUyFpcc_OM94TGWIOCsCSDeB5A",
+      appId: "1:846144714798:android:de1dbb38a299bfd781c7bf",
+      messagingSenderId: "846144714798",
+      projectId: "monumento-2k22",
+      storageBucket: "monumento-2k22.appspot.com"
+    ),
+  );
   runApp(MyApp());
 }
+
+// void main() {
+//   runApp(MyApp());
+// }
 
 class MyApp extends StatelessWidget {
 

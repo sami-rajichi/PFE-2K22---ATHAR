@@ -44,6 +44,17 @@ dependencies:
   ar_flutter_plugin: ^0.6.2
   firebase_storage: ^10.2.12
   webview_flutter: ^3.0.2
+  cloud_firestore: ^3.1.13
+  carousel_slider: ^4.1.1
+  flutter_rating_bar: ^4.0.0
+  animated_text_kit: ^4.2.1
+  flutter_svg: ^1.0.3
+  email_validator: ^2.0.1
+  reactive_forms: ^12.0.0
+  firebase_auth: ^3.3.17
+  fluttertoast: ^8.0.9
+  focused_menu: ^1.0.5
+  get: ^4.6.1
 
 dev_dependencies:
   flutter_test:

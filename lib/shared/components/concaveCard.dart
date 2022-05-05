@@ -11,7 +11,7 @@ Widget neumorphicCard({
         depth: 15,
         intensity: 0.8,
         shape: NeumorphicShape.flat,
-        boxShape: NeumorphicBoxShape.rect(),
+        boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(8)),
         color: color,
       ),
       child: child

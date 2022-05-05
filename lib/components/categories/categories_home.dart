@@ -38,7 +38,7 @@ class _HomeCategoriesState extends State<HomeCategories> {
           centerTitle: true,
         ),
         body: Center(
-          child: Stack(
+          child: Column(
             children: [
               InkWell(
                 highlightColor: Colors.indigo.withOpacity(0.3),
@@ -51,13 +51,13 @@ class _HomeCategoriesState extends State<HomeCategories> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              LiquidSwipeNavigator(region: 'nord')));
+                              LiquidSwipeNavigator(region: 'north')));
                 },
                 child: Container(
                   child: Ink(
                     child: Image.asset(
                       'assets/map/nord.png',
-                      height: 500,
+                      height: 200,
                       fit: BoxFit.cover,
                       color: color,
                     ),
@@ -67,7 +67,7 @@ class _HomeCategoriesState extends State<HomeCategories> {
               GestureDetector(
                   child: Image.asset(
                     'assets/map/center.png',
-                    height: 500,
+                    height: 200,
                     fit: BoxFit.cover,
                     color: Colors.grey,
                   ),
@@ -76,7 +76,7 @@ class _HomeCategoriesState extends State<HomeCategories> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                LiquidSwipeNavigator(region: 'centre')));
+                                LiquidSwipeNavigator(region: 'center')));
                   }),
               InkWell(
                 highlightColor: Colors.indigo.withOpacity(0.3),
@@ -89,12 +89,12 @@ class _HomeCategoriesState extends State<HomeCategories> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              LiquidSwipeNavigator(region: 'nord')));
+                              LiquidSwipeNavigator(region: 'sud')));
                 },
                 child: Ink(
                   child: Image.asset(
                     'assets/map/sud.png',
-                    height: 500,
+                    height: 200,
                     fit: BoxFit.cover,
                     color: color,
                   ),

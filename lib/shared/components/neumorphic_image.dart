@@ -5,12 +5,12 @@ Widget neumorphicImage({
   required Color? color,
   required Widget? image
 }) => Neumorphic(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(5),
       style: NeumorphicStyle(
         depth: 32,
-        intensity: 0.8,
+        intensity: 0.6,
         shape: NeumorphicShape.flat,
-        boxShape: NeumorphicBoxShape.rect(),
+        boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(8)),
         color: color,
       ),
       child: image,
