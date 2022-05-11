@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:monumento/components/authentication/sign_in.dart';
+import 'package:monumento/components/authentication/sign_up.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/navigation_drawer.dart';
 
 class GetAvatar extends StatefulWidget {
-  final String img;
+  String? img;
   final bool loggedIn;
-  const GetAvatar({Key? key, required this.img, required this.loggedIn})
+  GetAvatar({Key? key, 
+  required this.img, 
+  required this.loggedIn})
       : super(key: key);
 
   @override
@@ -30,9 +33,12 @@ class _GetAvatarState extends State<GetAvatar> {
                       MaterialPageRoute(builder: (context) => SignIn()),
                       (route) => false)),
               FocusedMenuItem(
-                  title: Text('Sign Up'),
-                  trailingIcon: Icon(Icons.lock_open_outlined),
-                  onPressed: () {}),
+                title: Text('Sign Up'),
+                trailingIcon: Icon(Icons.lock_open_outlined),
+                onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => SignUp()),
+                    (route) => false),
+              ),
             ],
             blurBackgroundColor: AppColors.mainColor.withOpacity(0.4),
             openWithTap: true,
@@ -44,7 +50,7 @@ class _GetAvatarState extends State<GetAvatar> {
                   radius: 30,
                   backgroundColor: Colors.white,
                   child: Image.asset(
-                    widget.img,
+                    widget.img!,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -84,7 +90,7 @@ class _GetAvatarState extends State<GetAvatar> {
                   radius: 30,
                   backgroundColor: Colors.white,
                   child: Image.asset(
-                    widget.img,
+                    widget.img!,
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -1,12 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:monumento/components/homepage/how_to_use.dart';
 import 'package:monumento/components/homepage/reviews.dart';
+import 'package:monumento/components/maps/maps_utils.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/d_b_icons_icons.dart';
+import 'package:monumento/models/users.dart';
+import 'package:monumento/network/firebaseServices.dart';
 import 'package:monumento/shared/components/bottomBar.dart';
 import 'package:monumento/shared/components/getAvatar.dart';
 import 'package:monumento/shared/components/menu_widget.dart';
@@ -19,9 +23,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  FirebaseAuth auth = FirebaseAuth.instance;
   bool appBar = true;
   ScrollController _scrollController = new ScrollController();
   int activeIndex = 0;
+  FirebaseServices firebaseServices = FirebaseServices();
   final List<String> images = [
     'assets/Categories/el-jem.jpg',
     'assets/Categories/carthage.png',
@@ -46,6 +52,7 @@ class _HomeState extends State<Home> {
     _scrollController.addListener(() {
       changeColor();
     });
+
   }
 
   @override
@@ -68,9 +75,12 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return FirebaseAuth.instance.currentUser == null
-          ? notLoggedIn()
-          : loggedIn();
+    if (auth.currentUser == null){
+      return notLoggedIn();
+    } else {
+      var uid = auth.currentUser!.uid;
+      return loggedIn(uid, auth.currentUser!);
+    }
   }
 
   Widget buildImage(String image, int index) {
@@ -100,86 +110,103 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget loggedIn() {
-    final user = FirebaseAuth.instance.currentUser!;
-      return Scaffold(
-          body: CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverAppBar(
-                pinned: true,
-                floating: true,
-                snap: true,
-                elevation: 0,
-                title: !appBar ? Text('Athar') : Text(''),
-                actions: [
-                  GetAvatar(img: 'assets/img/avatar.png', loggedIn: true,)
-                  ],
-                leading: !appBar
-                    ? MenuWidget()
-                    : Container(
-                        margin: EdgeInsets.only(top: 8, left: 8),
-                        width: 6,
-                        height: 6,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
+  Widget loggedIn(String uid, User user) {
+    return Scaffold(
+        body: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(uid).snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                print(snapshot.error);
+                return Text('Something went wrong !');
+              } else if (snapshot.hasData) {
+                var d = snapshot.data as DocumentSnapshot;
+                print(d['image']);
+                return CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverAppBar(
+                      pinned: true,
+                      floating: true,
+                      snap: true,
+                      elevation: 0,
+                      title: !appBar ? Text('Athar') : Text(''),
+                      actions: [
+                        GetAvatar(
+                          img: d['image'],
+                          loggedIn: true,
+                        )
+                      ],
+                      leading: !appBar
+                          ? MenuWidget()
+                          : Container(
+                              margin: EdgeInsets.only(top: 8, left: 8),
+                              width: 6,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                              ),
+                              child: MenuWidget(
+                                color: AppColors.mainColor,
+                              )),
+                      backgroundColor: appBar
+                          ? AppColors.backgroundColor
+                          : AppColors.mainColor,
+                      expandedHeight: 350,
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: Stack(
+                          alignment: Alignment.bottomLeft,
+                          children: [
+                            CarouselSlider.builder(
+                              options: CarouselOptions(
+                                height: 400,
+                                autoPlay: true,
+                                autoPlayInterval: Duration(seconds: 2),
+                                viewportFraction: 1,
+                                onPageChanged: (index, reason) {
+                                  setState(() => activeIndex = index);
+                                },
+                              ),
+                              itemCount: images.length,
+                              itemBuilder: (context, index, realIndex) {
+                                final img = images[index];
+                                return buildImage(img, index);
+                              },
+                            ),
+                            buildIndicator()
+                          ],
                         ),
-                        child: MenuWidget(
-                          color: AppColors.mainColor,
-                        )),
-                backgroundColor:
-                    appBar ? AppColors.backgroundColor : AppColors.mainColor,
-                expandedHeight: 350,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Stack(
-                    alignment: Alignment.bottomLeft,
-                    children: [
-                      CarouselSlider.builder(
-                        options: CarouselOptions(
-                          height: 400,
-                          autoPlay: true,
-                          autoPlayInterval: Duration(seconds: 2),
-                          viewportFraction: 1,
-                          onPageChanged: (index, reason) {
-                            setState(() => activeIndex = index);
-                          },
-                        ),
-                        itemCount: images.length,
-                        itemBuilder: (context, index, realIndex) {
-                          final img = images[index];
-                          return buildImage(img, index);
-                        },
-                      ),
-                      buildIndicator()
-                    ],
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    HowToUse(),
-                    Reviews(),
-                    Text(
-                      user.email!,
-                      style: TextStyle(
-                        fontSize: 20
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () => FirebaseAuth.instance.signOut(),
-                      child: Text(
-                        'sign out'
-                      ))
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          HowToUse(),
+                          Reviews(),
+                          Text(
+                            user.email!,
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          ElevatedButton(
+                              onPressed: () => FirebaseAuth.instance.signOut(),
+                              child: Text('sign out'))
+                        ],
+                      ),
+                    )
                   ],
-                ),
-              )
-            ],
-          ),
-          backgroundColor: AppColors.backgroundColor,
-          bottomNavigationBar:
-              ConvexBottomBar(backgroundColor: AppColors.mainColor));
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }),
+        backgroundColor: AppColors.backgroundColor,
+        bottomNavigationBar:
+            ConvexBottomBar(backgroundColor: AppColors.mainColor));
   }
 
   Widget notLoggedIn() {
@@ -194,7 +221,10 @@ class _HomeState extends State<Home> {
               elevation: 0,
               title: !appBar ? Text('Athar') : Text(''),
               actions: [
-                GetAvatar(img: 'assets/img/avatar.png', loggedIn: false,),
+                GetAvatar(
+                  img: 'assets/img/avatar.png',
+                  loggedIn: false,
+                ),
               ],
               leading: !appBar
                   ? MenuWidget()
@@ -260,7 +290,6 @@ class _HomeState extends State<Home> {
         ),
         backgroundColor: AppColors.backgroundColor,
         bottomNavigationBar:
-            ConvexBottomBar(backgroundColor: AppColors.mainColor)
-    );
+            ConvexBottomBar(backgroundColor: AppColors.mainColor));
   }
 }

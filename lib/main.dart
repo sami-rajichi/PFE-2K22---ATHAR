@@ -5,6 +5,7 @@ import 'package:monumento/components/categories/buildCategoryPage.dart';
 import 'package:monumento/components/categories/categories_home.dart';
 import 'package:monumento/components/menu/menu_page.dart';
 import 'package:monumento/components/welcomePage/welcome_page.dart';
+import 'package:monumento/constants/colors.dart';
 import 'package:monumento/home.dart';
 import 'package:monumento/shared/components/liquid_swipe_navigator.dart';
 import 'package:monumento/shared/components/navigation_drawer.dart';
@@ -34,6 +35,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData().copyWith(
+        errorColor: Colors.red,
+        colorScheme: ThemeData()
+                .colorScheme
+                .copyWith(primary: AppColors.mainColor),
+      ),
       scrollBehavior: MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse, 

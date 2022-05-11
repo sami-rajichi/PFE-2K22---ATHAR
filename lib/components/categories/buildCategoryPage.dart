@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:monumento/components/maps/maps_utils.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/concaveCard.dart';
 import 'package:monumento/shared/components/description.dart';
@@ -169,10 +170,15 @@ class _CategoryPageState extends State<CategoryPage> {
                                 sdColor: widget.color,
                                 boxShape: NeumorphicBoxShape.roundRect(
                                     BorderRadius.circular(6)),
-                                child: Text(
-                                    'Show In Map',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    MapUtils.openMap(35.296587159260156, 10.706878839971465);
+                                  },
+                                  child: Text(
+                                      'Show In Map',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                ),
                                 ),
                           ],
                         )

@@ -2,8 +2,12 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:monumento/components/authentication/reset_password.dart';
+import 'package:monumento/constants/colors.dart';
 import 'package:monumento/home.dart';
 import 'package:monumento/network/firebaseServices.dart';
+import 'package:monumento/shared/components/navigation_drawer.dart';
+import 'package:monumento/shared/components/success_alert.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class FormBuild extends StatefulWidget {
@@ -149,60 +153,59 @@ class _FormBuildState extends State<FormBuild> {
               ),
               Row(
                 children: [
-                  ReactiveCheckbox(formControlName: 'rememberMe'),
-                  Text(
-                    'Remember me',
-                    style: GoogleFonts.inter(
-                      fontSize: 15.0,
-                      color: const Color(0xFF0C0D34),
-                    ),
-                  ),
                   Spacer(),
-                  Text(
-                    'Forgot password?',
-                    style: GoogleFonts.inter(
-                      fontSize: 13.0,
-                      color: const Color(0xFF21899C),
-                      fontWeight: FontWeight.w500,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ResetPassword()
+                        )
+                      );
+                    },
+                    child: Text(
+                      'Forgot Password?',
+                      style: GoogleFonts.inter(
+                        decoration: TextDecoration.underline,
+                        fontSize: 13.0,
+                        color: AppColors.mainColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.right,
                     ),
-                    textAlign: TextAlign.right,
                   ),
                 ],
               ),
-              const SizedBox(height: 24.0),
+              const SizedBox(height: 40.0),
               loading
-               ? Center(child: CircularProgressIndicator(),)
-              
-               : ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                    minimumSize: Size(size.width * 0.55, size.height / 11),
-                    primary: Color(0xFF21899C),
-                    elevation: 6),
-                icon: Icon(
-                  Icons.lock_open,
-                  size: 24,
-                ),
-                onPressed: () {
-                  if (form.valid) {
-                    signIn(
-                      emailController, passController, context);
-                    // Navigator.of(context).pushAndRemoveUntil(
-                    //     MaterialPageRoute(
-                    //       builder: (context) => Home(),
-                    //     ),
-                    //     (route) => false);
-                  } else {
-                    form.markAllAsTouched();
-                  }
-                },
-                label: Text('Sign In',
-                    style: GoogleFonts.inter(
-                      fontSize: 18.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      height: 1.5,
-                    )),
-              ),
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          minimumSize:
+                              Size(size.width * 0.45, size.height / 13),
+                          // primary: Color(0xFF21899C),
+                          primary: AppColors.mainColor,
+                          elevation: 6),
+                      icon: Icon(
+                        Icons.login,
+                        size: 24,
+                      ),
+                      onPressed: () {
+                        if (form.valid) {
+                          signIn(emailController, passController, context);
+                        } else {
+                          form.markAllAsTouched();
+                        }
+                      },
+                      label: Text('Sign In',
+                          style: GoogleFonts.inter(
+                            fontSize: 18.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            height: 1.5,
+                          )),
+                    ),
             ],
           );
         },
@@ -210,47 +213,48 @@ class _FormBuildState extends State<FormBuild> {
     );
   }
 
-  Future signIn(
-    TextEditingController email, 
-    TextEditingController password, 
-    BuildContext context
-    ) async {
-      setState(() {
-        loading = true;
-      });
+  Future signIn(TextEditingController email, TextEditingController password,
+      BuildContext context) async {
+    setState(() {
+      loading = true;
+    });
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email.text.trim(), 
-      password: password.text.trim()
-      );
-    } on FirebaseAuthException catch (e){
+          email: email.text.trim(), password: password.text.trim());
+
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => NavigationDrawer()));
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SuccessAlert();
+          });
+    } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(
         content: RichText(
-          text: TextSpan(
-            children: [
-              const TextSpan(
-                text: 'Login Failed\n\n',
-                style: TextStyle(
+            text: TextSpan(children: [
+          const TextSpan(
+              text: 'Login Failed\n\n',
+              style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white
-                )
-              ),
-              TextSpan(
-                text: '['+e.code.toString()+']:'+e.toString().substring(e.toString().lastIndexOf(']')+1),
-                style: const TextStyle(
+                  color: Colors.white)),
+          TextSpan(
+              text: '[' +
+                  e.code.toString() +
+                  ']:' +
+                  e.toString().substring(e.toString().lastIndexOf(']') + 1),
+              style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
-                  color: Colors.white
-                )
-              ),
-            ]
-          )),
+                  color: Colors.white)),
+        ])),
         backgroundColor: Colors.redAccent,
         duration: Duration(seconds: 4),
         // shape: StadiumBorder(),
         behavior: SnackBarBehavior.floating,
-        );
+      );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       setState(() {
         loading = false;
