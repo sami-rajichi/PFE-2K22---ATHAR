@@ -129,7 +129,7 @@ class _BodyState extends State<Body> {
                   
                 },
                 child: ListTile(
-                  leading: Icon(Icons.logout, color: AppColors.mainColor,),
+                  leading: Icon(Icons.logout_rounded, color: AppColors.mainColor,),
                   tileColor: Colors.white,
                   contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   title: Text('Log out'),

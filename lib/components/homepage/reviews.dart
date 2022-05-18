@@ -62,8 +62,10 @@ class _ReviewsState extends State<Reviews> {
       alignment: Alignment.topCenter,
       children: [
         Container(
-            padding: EdgeInsets.only(top: 50,),
-            margin: EdgeInsets.only(top: 50, bottom: 12, right: 12, left: 12),
+            padding: EdgeInsets.only(
+              top: 70,
+            ),
+            margin: EdgeInsets.only(top: 60, bottom: 8, right: 12, left: 12),
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -78,7 +80,7 @@ class _ReviewsState extends State<Reviews> {
                 Text(
                   reviews[index]['name'],
                   style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: AppColors.bigTextColor),
                 ),
@@ -88,7 +90,7 @@ class _ReviewsState extends State<Reviews> {
                 RatingBarIndicator(
                   rating: reviews[index]['rating'],
                   itemCount: 5,
-                  itemSize: 40,
+                  itemSize: 30,
                   direction: Axis.horizontal,
                   itemBuilder: (context, _) => Icon(
                     Icons.star,
@@ -99,35 +101,43 @@ class _ReviewsState extends State<Reviews> {
                   height: 190,
                   child: Padding(
                     padding: const EdgeInsets.all(18.0),
-                    child: Center(
-                      child: DefaultTextStyle(
-                        maxLines: 5,
-                        softWrap: true,
-                        style: GoogleFonts.vollkorn(
-                            fontSize: 22, color: AppColors.bigTextColor),
-                        child: AnimatedTextKit(
-                          animatedTexts: [
-                          TypewriterAnimatedText(
-                            reviews[index]['review'],
-                            speed: Duration(milliseconds: 15)
+                    child: DefaultTextStyle(
+                      textAlign: TextAlign.justify,
+                      maxLines: 5,
+                      softWrap: true,
+                      style: GoogleFonts.montserrat(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                          color: AppColors.bigTextColor,
                           ),
-                        ])
-                        ,
-                      ),
+                      child: AnimatedTextKit(animatedTexts: [
+                        TypewriterAnimatedText(reviews[index]['review'],
+                            speed: Duration(milliseconds: 15)),
+                      ]),
                     ),
                   ),
                 ),
                 buildIndicator()
               ],
             )),
-        ClipOval(
-          child: CircleAvatar(
-            radius: 50,
-            child: Image.asset(
-              reviews[index]['image'],
-              fit: BoxFit.cover,
-            ),
-          ),
+        Container(
+          width: 120,
+          height: 120,
+          decoration: BoxDecoration(
+              border: Border.all(
+                width: 4, color: Colors.white),
+              boxShadow: [
+                BoxShadow(
+                    spreadRadius: 2,
+                    blurRadius: 4,
+                    color: Colors.black.withOpacity(0.2),
+                    offset: Offset(0, 5))
+              ],
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                fit: BoxFit.cover, 
+                image: AssetImage(reviews[index]['image'])
+                )),
         ),
       ],
     );
@@ -140,8 +150,8 @@ class _ReviewsState extends State<Reviews> {
         activeIndex: activeIndex,
         count: reviews.length,
         effect: ScrollingDotsEffect(
-            dotWidth: 12,
-            dotHeight: 12,
+            dotWidth: 8,
+            dotHeight: 8,
             activeDotColor: AppColors.mainColor,
             dotColor: Colors.black26),
       ),

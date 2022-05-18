@@ -96,6 +96,7 @@ class _LiquidSwipeNavigatorState extends State<LiquidSwipeNavigator> {
                           subtitle3Value: monuments[i].subtitle3Value,
                           info: monuments[i].info,
                           url: monuments[i].url,
+                          fromListView: false,
                           color: Colors.grey[400]!.withOpacity(0.2),
                         )
                     ],
@@ -237,6 +238,7 @@ class _LiquidSwipeNavigatorState extends State<LiquidSwipeNavigator> {
                                   subtitle3Value: monuments[i].subtitle3Value,
                                   info: monuments[i].info,
                                   url: monuments[i].url,
+                                  fromListView: false,
                                   color: Colors.grey[400]!.withOpacity(0.2),
                                 )
                             ],

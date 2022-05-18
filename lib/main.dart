@@ -13,7 +13,15 @@ import 'package:firebase_core/firebase_core.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarDividerColor: AppColors.backgroundColor,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    )
+  );
   await Firebase.initializeApp(
     options: FirebaseOptions(
       apiKey: "AIzaSyD4nDMMhzUyFpcc_OM94TGWIOCsCSDeB5A",

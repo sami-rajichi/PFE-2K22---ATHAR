@@ -83,13 +83,11 @@ class _HomeState extends State<Home> {
   }
 
   Widget buildImage(String image, int index) {
-    return Container(
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(300)),
-        child: Image.asset(
-          image,
-          fit: BoxFit.cover,
-        ),
+    return ClipRRect(
+      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(300)),
+      child: Image.asset(
+        image,
+        fit: BoxFit.cover,
       ),
     );
   }
@@ -129,8 +127,16 @@ class _HomeState extends State<Home> {
                       pinned: true,
                       floating: true,
                       snap: true,
-                      elevation: 0,
-                      title: !appBar ? Text('Athar') : Text(''),
+                      elevation: !appBar ? 6 : 0,
+                      title: !appBar 
+                      ? Text(
+                        'Athar',
+                        style: TextStyle(
+                          color: AppColors.mainColor
+                        ),
+                        ) 
+                      : Text(''),
+                      centerTitle: true,
                       actions: [
                         GetAvatar(
                           img: d['image'],
@@ -142,7 +148,7 @@ class _HomeState extends State<Home> {
                         )
                       ],
                       leading: !appBar
-                          ? MenuWidget()
+                          ? MenuWidget(color: AppColors.mainColor,)
                           : Container(
                               margin: EdgeInsets.only(top: 8, left: 8),
                               width: 6,
@@ -157,7 +163,7 @@ class _HomeState extends State<Home> {
                               )),
                       backgroundColor: appBar
                           ? AppColors.backgroundColor
-                          : AppColors.mainColor,
+                          : Colors.white,
                       expandedHeight: 350,
                       flexibleSpace: FlexibleSpaceBar(
                         background: Stack(
@@ -209,7 +215,7 @@ class _HomeState extends State<Home> {
             }),
         backgroundColor: AppColors.backgroundColor,
         bottomNavigationBar:
-            ConvexBottomBar(backgroundColor: AppColors.mainColor));
+            ConvexBottomBar(backgroundColor: AppColors.mainColor,));
   }
 
   Widget notLoggedIn() {

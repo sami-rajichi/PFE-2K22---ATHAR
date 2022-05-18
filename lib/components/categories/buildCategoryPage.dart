@@ -7,6 +7,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:monumento/components/maps/maps_utils.dart';
+import 'package:monumento/components/profile/favorites.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/concaveCard.dart';
 import 'package:monumento/shared/components/description.dart';
@@ -32,25 +33,27 @@ class CategoryPage extends StatefulWidget {
   final Color? color;
   final Color? backgroundColor;
   final String? url;
+  final bool? fromListView;
 
-  CategoryPage(
-      {Key? key,
-      this.name,
-      this.location,
-      this.image,
-      this.region,
-      this.country,
-      this.subtitle1,
-      this.subtitle2,
-      this.subtitle3,
-      this.color = grey400,
-      this.backgroundColor = grey400,
-      this.url,
-      this.subtitle1Value,
-      this.subtitle2Value,
-      this.subtitle3Value,
-      this.info})
-      : super(key: key);
+  CategoryPage({
+    Key? key,
+    this.name,
+    this.location,
+    this.image,
+    this.region,
+    this.country,
+    this.subtitle1,
+    this.subtitle2,
+    this.subtitle3,
+    this.color = Colors.white,
+    this.backgroundColor = Colors.white,
+    this.url,
+    this.subtitle1Value,
+    this.subtitle2Value,
+    this.subtitle3Value,
+    this.info,
+    this.fromListView,
+  }) : super(key: key);
 
   @override
   State<CategoryPage> createState() => _CategoryPageState();
@@ -221,7 +224,7 @@ class _CategoryPageState extends State<CategoryPage> {
           ),
         ),
       ),
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: Colors.white,
     );
   }
 
@@ -375,7 +378,7 @@ class _CategoryPageState extends State<CategoryPage> {
               return CircularProgressIndicator();
             }
           }),
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: Colors.white,
     );
   }
 
@@ -428,54 +431,88 @@ class _CategoryPageState extends State<CategoryPage> {
             .doc(uid)
             .update({'liked-monuments': FieldValue.arrayUnion(data)});
         final update = SnackBar(
-        content: RichText(
-            text: TextSpan(children: [
-          const TextSpan(
-              text: 'Monument Added\n\n',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)),
-          TextSpan(
-              text: '${widget.name} has been added to favorites',
-              style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white)),
-        ])),
-        backgroundColor: AppColors.mainColor,
-        duration: Duration(seconds: 2),
-        // shape: StadiumBorder(),
-        behavior: SnackBarBehavior.floating,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(update);
+          content: RichText(
+              text: TextSpan(children: [
+            const TextSpan(
+                text: 'Monument Added\n\n',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
+            TextSpan(
+                text: '${widget.name} has been added to favorites',
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white)),
+          ])),
+          backgroundColor: AppColors.mainColor,
+          duration: Duration(seconds: 2),
+          // shape: StadiumBorder(),
+          behavior: SnackBarBehavior.floating,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(update);
       } else {
-        final remove = SnackBar(
-        content: RichText(
-            text: TextSpan(children: [
-          const TextSpan(
-              text: 'Monument Removed\n\n',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)),
-          TextSpan(
-              text: '${widget.name} has been removed from favorites',
-              style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white)),
-        ])),
-        backgroundColor: AppColors.mainColor,
-        duration: Duration(seconds: 2),
-        // shape: StadiumBorder(),
-        behavior: SnackBarBehavior.floating,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(remove);
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(uid)
-            .update({'liked-monuments': FieldValue.arrayRemove(data)});
+        if (widget.fromListView == false) {
+          final remove = SnackBar(
+            content: RichText(
+                text: TextSpan(children: [
+              const TextSpan(
+                  text: 'Monument Removed\n\n',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
+              TextSpan(
+                  text: '${widget.name} has been removed from favorites',
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white)),
+            ])),
+            backgroundColor: AppColors.mainColor,
+            duration: Duration(seconds: 2),
+            // shape: StadiumBorder(),
+            behavior: SnackBarBehavior.floating,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(remove);
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .update({'liked-monuments': FieldValue.arrayRemove(data)});
+        } else {
+          try {
+            final remove = SnackBar(
+              content: RichText(
+                  text: TextSpan(children: [
+                const TextSpan(
+                    text: 'Monument Removed\n\n',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+                TextSpan(
+                    text: '${widget.name} has been removed from favorites',
+                    style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.white)),
+              ])),
+              backgroundColor: AppColors.mainColor,
+              duration: Duration(seconds: 2),
+              // shape: StadiumBorder(),
+              behavior: SnackBarBehavior.floating,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(remove);
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(uid)
+                .update({'liked-monuments': FieldValue.arrayRemove(data)});
+          } on RangeError catch (e) {
+            print(e);
+            Navigator.of(context).pop();
+          }
+        }
       }
     } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(

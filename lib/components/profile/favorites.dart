@@ -105,7 +105,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       height: 45,
                     ),
                     Container(
-                      height: 490,
+                      height: MediaQuery.of(context).size.height -390,
                       child: ListView.builder(
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
@@ -129,23 +129,29 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                 },
                                 child: InkWell(
                                   onTap: () {
+                                    print(index);
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) => SpecificMonument(
                                           index: index,
                                           region: favorites[index]['region'], 
-                                          specificMonument: true
+                                          specificMonument: true,
                                         )
                                       )
                                     );
+                                    print(index);
                                   },
                                   child: Material(
                                     elevation: 8,
                                     shadowColor: Colors.black,
+                                    shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
                                     child: ListTile(
+                                      key: ObjectKey(item),
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(20)),
+                                              BorderRadius.circular(30)),
                                       leading: ClipRRect(
                                         borderRadius: BorderRadius.circular(90),
                                         child: Image.asset(

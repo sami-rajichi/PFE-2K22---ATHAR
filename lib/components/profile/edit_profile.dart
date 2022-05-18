@@ -131,7 +131,7 @@ class _EditProfileState extends State<EditProfile> {
             if (saved) {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ProfileScreen(
-                      image: imgPath!,
+                      image: widget.image,
                       name: nameBU!,
                       gender: widget.gender,
                       email: emailBU!,
@@ -228,7 +228,9 @@ class _EditProfileState extends State<EditProfile> {
                         ? Center(
                             child: CircularProgressIndicator(),
                           )
-                        : Center(
+                        : SizedBox(
+                          height: 60,
+                          width: double.infinity,
                             child: ElevatedButton(
                               style: OutlinedButton.styleFrom(
                                 primary: Colors.grey[500],

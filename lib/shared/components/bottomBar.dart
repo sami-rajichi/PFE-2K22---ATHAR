@@ -1,16 +1,16 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:monumento/components/ar/arUs.dart';
-
-import '../../d_b_icons_icons.dart';
-import '../../home.dart';
+import 'package:monumento/components/categories/categories_home.dart';
+import 'package:monumento/constants/colors.dart';
+import 'package:monumento/shared/components/navigation_drawer.dart';
 
 class ConvexBottomBar extends StatefulWidget {
   
-  final Color? backgroundColor; 
+  final Color? backgroundColor;
   
   const ConvexBottomBar({ 
-    Key? key, this.backgroundColor }) : super(key: key);
+    Key? key, this.backgroundColor}) : super(key: key);
 
   @override
   State<ConvexBottomBar> createState() => _ConvexBottomBarState();
@@ -18,25 +18,23 @@ class ConvexBottomBar extends StatefulWidget {
 
 class _ConvexBottomBarState extends State<ConvexBottomBar> {
   int selectedPage = 1;
-  final pages = [ArUs(), Home()];
+  final pages = [ArUs(), NavigationDrawer(), HomeCategories()];
   @override
   Widget build(BuildContext context) {
     return ConvexAppBar(
-        backgroundColor: widget.backgroundColor,
+        backgroundColor: Colors.white,
+        elevation: 8,
         curveSize: 80,
         top: -12,
         items: [ 
           TabItem(
-            icon: DBIcons.augmented_reality,
-            title: 'Camera'
+            icon: Icon(Icons.camera_alt_rounded, color: AppColors.mainColor,),
           ),
           TabItem(
-            icon: Icons.home_filled,
-            title: 'Home'
+            icon: Icon(Icons.home_filled, color: AppColors.mainColor,),
           ),
           TabItem(
-            icon: DBIcons.map,
-            title: 'Maps'
+            icon: Icon(Icons.account_balance_rounded, color: AppColors.mainColor,),
           )
         ],
         initialActiveIndex: selectedPage,
@@ -44,9 +42,9 @@ class _ConvexBottomBarState extends State<ConvexBottomBar> {
           setState(() {
             selectedPage = i;
           });
-          Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (context) => pages[i]));
+
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => pages[selectedPage]));
         },
       );
   }

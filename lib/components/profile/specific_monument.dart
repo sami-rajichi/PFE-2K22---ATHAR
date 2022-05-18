@@ -101,6 +101,7 @@ class _SpecificMonumentState extends State<SpecificMonument> {
     for (Monument e in monuments) {
       if (e.name == name) {
         return CategoryPage(
+          fromListView: true,
           name: e.name,
           image: e.image,
           location: e.location,

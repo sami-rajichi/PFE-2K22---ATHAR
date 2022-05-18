@@ -8,8 +8,8 @@ Widget neumorphicCard({
 }) => Neumorphic(
       padding: EdgeInsets.all(15),
       style: NeumorphicStyle(
-        depth: 15,
-        intensity: 0.8,
+        depth: 3,
+        intensity: 1,
         shape: NeumorphicShape.flat,
         boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(8)),
         color: color,

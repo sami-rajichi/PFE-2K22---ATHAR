@@ -62,7 +62,7 @@ class _HowToUseState extends State<HowToUse> {
                                 children: [
                                   Image.asset(
                                     'assets/img/play-button.png',
-                                    height: 26,
+                                    height: 18,
                                     color: Colors.white,
                                   ),
                                   Text(
@@ -110,7 +110,7 @@ class _HowToUseState extends State<HowToUse> {
                                 children: [
                                   Image.asset(
                                     'assets/img/play-button.png',
-                                    height: 26,
+                                    height: 18,
                                     color: Colors.white,
                                   ),
                                   Text(

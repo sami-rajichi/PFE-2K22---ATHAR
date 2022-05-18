@@ -32,9 +32,9 @@ class _HomeCategoriesState extends State<HomeCategories> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: MenuWidget(),
-          title: Text('Monumento'),
-          backgroundColor: AppColors.mainColor,
+          leading: MenuWidget(color: AppColors.mainColor,),
+          title: Text('Monumento', style: TextStyle(color: AppColors.mainColor),),
+          backgroundColor: Colors.white,
           centerTitle: true,
         ),
         body: Center(
@@ -105,7 +105,7 @@ class _HomeCategoriesState extends State<HomeCategories> {
         ),
         bottomNavigationBar:
             ConvexBottomBar(
-              backgroundColor: AppColors.mainColor
+              backgroundColor: AppColors.mainColor,
         )
       );
   }
