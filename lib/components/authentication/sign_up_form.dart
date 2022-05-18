@@ -155,8 +155,8 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
                   hint: 'Gender',
                   showSelectedItems: true,
                   items: [
-                    '👩 Femme',
-                    '🧑 Homme',
+                    '👩 Woman',
+                    '🧑 Man',
                   ],
                   showClearButton: true,
                   maxHeight: 120,
@@ -356,7 +356,7 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
     
     FirebaseAuth auth =  FirebaseAuth.instance;
     String img = 'assets/img/avatar.png';
-    if (gender.substring(3) == 'Homme'){
+    if (gender.substring(3) == 'Man'){
       img = 'assets/img/homme.png';
     } else {
       img = 'assets/img/femme.png';

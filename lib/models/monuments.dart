@@ -9,6 +9,7 @@ class Monument {
   final String? subtitle2Value;
   final String? subtitle3Value;
   final String? location;
+  final String? region;
   final String? image;
   final String? country;
   final String? url;
@@ -17,6 +18,7 @@ class Monument {
   Monument({
     this.name, 
     this.location, 
+    this.region, 
     this.image, 
     this.country, 
     this.subtitle1, this.subtitle2, this.subtitle3,
@@ -30,6 +32,7 @@ class Monument {
       name: json['name'],
       info: json['info'],
       location: json['location'],
+      region: json['region'],
       image: json['image'],
       subtitle1: json['subtitle1'],
       subtitle2: json['subtitle2'],

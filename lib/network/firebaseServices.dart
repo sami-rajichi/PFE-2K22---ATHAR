@@ -20,7 +20,7 @@ class FirebaseServices {
     switch (region){
       case 'north' : firebaseFirestore = FirebaseFirestore.instance
       .collection('north_monuments'); break;
-      case 'center' : firebaseFirestore = FirebaseFirestore.instance
+      case 'central' : firebaseFirestore = FirebaseFirestore.instance
       .collection('central_monuments'); break;
       case 'sud' : firebaseFirestore = FirebaseFirestore.instance
       .collection('sud_monuments'); break;

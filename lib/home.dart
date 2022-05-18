@@ -27,7 +27,6 @@ class _HomeState extends State<Home> {
   bool appBar = true;
   ScrollController _scrollController = new ScrollController();
   int activeIndex = 0;
-  FirebaseServices firebaseServices = FirebaseServices();
   final List<String> images = [
     'assets/Categories/el-jem.jpg',
     'assets/Categories/carthage.png',
@@ -135,6 +134,10 @@ class _HomeState extends State<Home> {
                       actions: [
                         GetAvatar(
                           img: d['image'],
+                          name: d['name'],
+                          gender: d['gender'],
+                          email: d['email'],
+                          pass: d['password'],
                           loggedIn: true,
                         )
                       ],
@@ -272,17 +275,6 @@ class _HomeState extends State<Home> {
                 children: [
                   HowToUse(),
                   Reviews(),
-                  // Text(
-                  //   user.email!,
-                  //   style: TextStyle(
-                  //     fontSize: 20
-                  //   ),
-                  // ),
-                  // ElevatedButton(
-                  //   onPressed: () => FirebaseAuth.instance.signOut(),
-                  //   child: Text(
-                  //     'sign out'
-                  //   ))
                 ],
               ),
             )

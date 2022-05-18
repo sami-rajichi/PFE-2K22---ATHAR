@@ -76,7 +76,7 @@ class _HomeCategoriesState extends State<HomeCategories> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                LiquidSwipeNavigator(region: 'center')));
+                                LiquidSwipeNavigator(region: 'central')));
                   }),
               InkWell(
                 highlightColor: Colors.indigo.withOpacity(0.3),

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:monumento/constants/colors.dart';
 
-class SuccessAlert extends StatelessWidget {
+class UpdatedAlert extends StatelessWidget {
 
   
   String header;
   String title;
   String desc;
-  SuccessAlert({
+  UpdatedAlert({
     Key? key,
     this.header = 'assets/animations/done.json',
     this.title = 'Login Succeed',
@@ -47,6 +47,7 @@ class SuccessAlert extends StatelessWidget {
                   ),
                   SizedBox(height: 25,),
                   ElevatedButton(onPressed: () {
+                    Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
                     style: ElevatedButton.styleFrom(
