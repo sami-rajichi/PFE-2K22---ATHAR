@@ -18,7 +18,7 @@ class NavigationDrawer extends StatefulWidget {
 }
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
-  MenuItem currentItem = MenuItems.home;
+  MI currentItem = MenuItems.home;
   @override
   Widget build(BuildContext context) {
     return ZoomDrawer(

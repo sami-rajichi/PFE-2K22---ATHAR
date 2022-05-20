@@ -3,15 +3,15 @@ import 'package:monumento/d_b_icons_icons.dart';
 import 'package:monumento/models/menu_item.dart';
 
 class MenuItems {
-  static const home = MenuItem('Home', Icons.home);
-  static const map = MenuItem('Map', DBIcons.map);
-  static const ar = MenuItem('Augmented Reality', DBIcons.augmented_reality);
-  static const category = MenuItem('Archeological Sites', Icons.category);
-  static const help = MenuItem('Help', Icons.help);
-  static const update = MenuItem('Update', Icons.update);
-  static const aboutUs = MenuItem('About Us', Icons.info_outlined);
+  static const home = MI('Home', Icons.home);
+  static const map = MI('Map', DBIcons.map);
+  static const ar = MI('Augmented Reality', DBIcons.augmented_reality);
+  static const category = MI('Archeological Sites', Icons.category);
+  static const help = MI('Help', Icons.help);
+  static const update = MI('Update', Icons.update);
+  static const aboutUs = MI('About Us', Icons.info_outlined);
 
-  static const all = <MenuItem>[
+  static const all = <MI>[
     home,
     map,
     ar,
@@ -24,8 +24,8 @@ class MenuItems {
 
 class MenuPage extends StatelessWidget {
 
-  final MenuItem currentItem;
-  final ValueChanged<MenuItem> onSelectedItem;
+  final MI currentItem;
+  final ValueChanged<MI> onSelectedItem;
 
   const MenuPage({ Key? key, 
   required this.currentItem, required this.onSelectedItem }) : super(key: key);
@@ -50,7 +50,7 @@ class MenuPage extends StatelessWidget {
     );
   }
 
-  Widget buildItem(MenuItem e) => ListTileTheme(
+  Widget buildItem(MI e) => ListTileTheme(
     selectedColor: Colors.white,
     child: ListTile(
       selected: currentItem == e,

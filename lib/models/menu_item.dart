@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
-class MenuItem {
+class MI {
   final String text;
   final IconData icon;
 
-  const MenuItem(this.text, this.icon);
+  const MI(this.text, this.icon);
 }

@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:monumento/components/profile/edit_profile.dart';
 import 'package:monumento/components/profile/favorites.dart';
+import 'package:monumento/components/profile/gallery.dart';
 import 'package:monumento/constants/colors.dart';
+import 'package:monumento/shared/components/navigation_drawer.dart';
 
 class Body extends StatefulWidget {
   final String image;
@@ -113,7 +116,15 @@ class _BodyState extends State<Body> {
               SizedBox(height: 16,),
               InkWell(
                 onTap: () {
-                  
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => GalleryScreen(
+                        image: widget.image,
+                            name: widget.name,
+                            gender: widget.gender,
+                            email: widget.email,
+                            pass: widget.pass,))
+                  );
                 },
                 child: ListTile(
                   leading: Icon(Icons.photo_album, color: AppColors.mainColor,),
@@ -126,7 +137,11 @@ class _BodyState extends State<Body> {
               SizedBox(height: 16,),
               InkWell(
                 onTap: () {
-                  
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => NavigationDrawer()),
+                      (route) => false);
                 },
                 child: ListTile(
                   leading: Icon(Icons.logout_rounded, color: AppColors.mainColor,),
@@ -148,6 +163,8 @@ class _BodyState extends State<Body> {
       return AssetImage('assets/img/avatar.png');
     } else if (widget.image.startsWith('assets/')) {
       return AssetImage(widget.image);
+    } else if (widget.image.startsWith('http')){
+      return NetworkImage(widget.image);
     } else {
       return FileImage(File(widget.image));
     }

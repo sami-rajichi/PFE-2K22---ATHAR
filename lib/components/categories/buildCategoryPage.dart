@@ -79,18 +79,6 @@ class _CategoryPageState extends State<CategoryPage> {
     }
   }
 
-  popUpWebView(BuildContext context) => showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-            content: WebView(
-              javascriptMode: JavascriptMode.unrestricted,
-              initialUrl: widget.url,
-              // onWebViewCreated: (wvc){
-              //   _controller.complete(wvc);
-              // },
-            ),
-          ));
-
   Widget notLoggedIn() {
     return Scaffold(
       body: Padding(
@@ -178,42 +166,12 @@ class _CategoryPageState extends State<CategoryPage> {
                           ),
                         ),
                         SizedBox(
+                          height: 20,
+                        ),
+                        getButtons(),
+                        SizedBox(
                           height: 8,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            neumorphicButton(
-                                prColor: Color.fromRGBO(189, 189, 189, 1)
-                                    .withOpacity(0.6),
-                                sdColor: widget.color,
-                                boxShape: NeumorphicBoxShape.roundRect(
-                                    BorderRadius.circular(6)),
-                                child: GestureDetector(
-                                  onTap: (() => popUpWebView(context)),
-                                  child: Text(
-                                    'Read more',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                )),
-                            neumorphicButton(
-                              prColor: Color.fromRGBO(189, 189, 189, 1)
-                                  .withOpacity(0.6),
-                              sdColor: widget.color,
-                              boxShape: NeumorphicBoxShape.roundRect(
-                                  BorderRadius.circular(6)),
-                              child: GestureDetector(
-                                onTap: () {
-                                  MapUtils.openMap(widget.name!);
-                                },
-                                child: Text(
-                                  'Show In Map',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
                       ],
                     )),
                 SizedBox(
@@ -325,45 +283,12 @@ class _CategoryPageState extends State<CategoryPage> {
                                   ),
                                 ),
                                 SizedBox(
+                                  height: 20,
+                                ),
+                                getButtons(),
+                                SizedBox(
                                   height: 8,
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    neumorphicButton(
-                                        prColor:
-                                            Color.fromRGBO(189, 189, 189, 1)
-                                                .withOpacity(0.6),
-                                        sdColor: widget.color,
-                                        boxShape: NeumorphicBoxShape.roundRect(
-                                            BorderRadius.circular(6)),
-                                        child: GestureDetector(
-                                          onTap: (() => popUpWebView(context)),
-                                          child: Text(
-                                            'Read more',
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                        )),
-                                    neumorphicButton(
-                                      prColor: Color.fromRGBO(189, 189, 189, 1)
-                                          .withOpacity(0.6),
-                                      sdColor: widget.color,
-                                      boxShape: NeumorphicBoxShape.roundRect(
-                                          BorderRadius.circular(6)),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          MapUtils.openMap(widget.name!);
-                                        },
-                                        child: Text(
-                                          'Show In Map',
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
                               ],
                             )),
                         SizedBox(
@@ -379,6 +304,70 @@ class _CategoryPageState extends State<CategoryPage> {
             }
           }),
       backgroundColor: Colors.white,
+    );
+  }
+
+  Widget getButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Expanded(
+          child: OutlinedButton.icon(
+              icon: Icon(
+                Icons.read_more_rounded,
+                color: AppColors.mainColor,
+                size: 12,
+              ),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: AppColors.mainColor),
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(3),
+                ),
+                primary: Colors.grey[600],
+              ),
+              onPressed: () {
+                MapUtils.openReadMore(widget.url!);
+              },
+              label: Text(
+                'READ MORE',
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 12,
+                    letterSpacing: 2.2,
+                    color: AppColors.mainColor),
+              )),
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        Expanded(
+          child: ElevatedButton.icon(
+            icon: Icon(
+              Icons.map,
+              color: Colors.white,
+              size: 12,
+            ),
+            style: OutlinedButton.styleFrom(
+              primary: Colors.grey[600],
+              backgroundColor: AppColors.mainColor,
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(3)),
+            ),
+            onPressed: () {
+              MapUtils.openMap(widget.name!);
+            },
+            label: Text(
+              "SHOW IN MAP",
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 12, letterSpacing: 2.2, color: Colors.white),
+            ),
+          ),
+        )
+      ],
     );
   }
 

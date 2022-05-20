@@ -14,4 +14,18 @@ class MapUtils {
       )) throw 'Could not launch $googleMapUrl';
     
   }
+
+  static Future<void> openReadMore(String url) async {
+    final readMoreUrl = Uri.parse(url);
+
+    if (!await launchUrl(
+      readMoreUrl,
+      mode: LaunchMode.inAppWebView,
+      webViewConfiguration: WebViewConfiguration(
+        enableJavaScript: true,
+        enableDomStorage: true
+      )
+      )) throw 'Could not launch $readMoreUrl';
+    
+  }
 }

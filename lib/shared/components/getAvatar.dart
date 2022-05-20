@@ -150,6 +150,8 @@ class _GetAvatarState extends State<GetAvatar> {
       return AssetImage('assets/img/avatar.png');
     } else if (widget.img!.startsWith('assets/')) {
       return AssetImage(widget.img!);
+    } else if (widget.img!.startsWith('http')){
+      return NetworkImage(widget.img!);
     } else {
       return FileImage(File(widget.img!));
     }

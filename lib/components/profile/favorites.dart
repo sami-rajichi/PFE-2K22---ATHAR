@@ -208,6 +208,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       return AssetImage('assets/img/avatar.png');
     } else if (widget.image.startsWith('assets/')) {
       return AssetImage(widget.image);
+    } else if (widget.image.startsWith('http')){
+      return NetworkImage(widget.image);
     } else {
       return FileImage(File(widget.image));
     }

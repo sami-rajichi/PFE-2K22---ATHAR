@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,7 @@ import 'package:monumento/components/profile/profile_screen.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/update_alert.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:shimmer/shimmer.dart';
 
 class EditProfile extends StatefulWidget {
   final String image;
@@ -65,6 +67,7 @@ class _EditProfileState extends State<EditProfile> {
   String? passBU;
   String? imgBU;
   bool loading = false;
+  bool fromCloud = false;
   bool saved = true;
   late NavigatorState navigatorState;
 
@@ -131,7 +134,7 @@ class _EditProfileState extends State<EditProfile> {
             if (saved) {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ProfileScreen(
-                      image: widget.image,
+                      image: imgPath!,
                       name: nameBU!,
                       gender: widget.gender,
                       email: emailBU!,
@@ -163,23 +166,38 @@ class _EditProfileState extends State<EditProfile> {
                   InkWell(
                     onTap: pickImage,
                     borderRadius: BorderRadius.circular(80),
-                    child: Container(
-                      width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 4, color: AppColors.backgroundColor),
-                          boxShadow: [
-                            BoxShadow(
-                                spreadRadius: 2,
-                                blurRadius: 10,
-                                color: Colors.black.withOpacity(0.1),
-                                offset: Offset(0, 10))
-                          ],
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.cover, image: getImage())),
-                    ),
+                    child: fromCloud
+                        ? Shimmer.fromColors(
+                            baseColor: Colors.grey[400]!,
+                            highlightColor: Colors.grey[200]!,
+                            child: Container(
+                              width: 150,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                color: AppColors.mainColor,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    width: 4, color: AppColors.backgroundColor),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            width: 150,
+                            height: 150,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 4, color: AppColors.backgroundColor),
+                                boxShadow: [
+                                  BoxShadow(
+                                      spreadRadius: 2,
+                                      blurRadius: 10,
+                                      color: Colors.black.withOpacity(0.1),
+                                      offset: Offset(0, 10))
+                                ],
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover, image: getImage())),
+                          ),
                   ),
                   Positioned(
                       bottom: 0,
@@ -229,8 +247,8 @@ class _EditProfileState extends State<EditProfile> {
                             child: CircularProgressIndicator(),
                           )
                         : SizedBox(
-                          height: 60,
-                          width: double.infinity,
+                            height: 60,
+                            width: double.infinity,
                             child: ElevatedButton(
                               style: OutlinedButton.styleFrom(
                                 primary: Colors.grey[500],
@@ -369,6 +387,19 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+  Future uploadFile(String name, String filePath) async {
+    final path = 'user-profile-images/$name';
+    final file = File(filePath);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    final uploadedTask = ref.putFile(file);
+
+    final snapshot = await uploadedTask.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+
+    return urlDownload;
+  }
+
   Future pickImage() async {
     try {
       final source = await showImageSource(context);
@@ -377,8 +408,15 @@ class _EditProfileState extends State<EditProfile> {
 
       final tempImg = File(image.path);
       setState(() {
+        fromCloud = true;
+      });
+      final urlDownload = await uploadFile(image.name, image.path);
+      setState(() {
+        fromCloud = false;
+      });
+      setState(() {
         imgPicked = tempImg;
-        imgPath = image.path;
+        imgPath = urlDownload;
       });
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
@@ -453,8 +491,9 @@ class _EditProfileState extends State<EditProfile> {
       return AssetImage('assets/img/avatar.png');
     } else if (imgPath!.startsWith('assets/')) {
       return AssetImage(imgPath!);
+    } else if (imgPath!.startsWith('http')) {
+      return NetworkImage(imgPath!);
     } else {
-      Future.delayed(Duration(milliseconds: 1500));
       return FileImage(File(imgPath!));
     }
   }
@@ -528,7 +567,8 @@ class _EditProfileState extends State<EditProfile> {
     if (emailBU == emailController.text &&
         nameBU == nameController.text &&
         passBU == passController.text &&
-        imgPath! == imgBU) {
+        imgPath! == imgBU &&
+        fromCloud == false) {
       return false;
     }
     return true;
@@ -616,7 +656,13 @@ class _EditProfileState extends State<EditProfile> {
                                 onPressed: () {
                                   update(nameController, emailController,
                                       passController, context);
-                                  Navigator.of(context).pop();
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => ProfileScreen(
+                                          image: imgPath!,
+                                          name: nameBU!,
+                                          gender: widget.gender,
+                                          email: emailBU!,
+                                          pass: passBU!)));
                                 },
                                 child: Text(
                                   "SAVE",
