@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monumento/components/authentication/sign_in.dart';
 import 'package:monumento/constants/colors.dart';
-import 'package:monumento/home.dart';
 import 'package:monumento/shared/components/navigation_drawer.dart';
 import 'package:monumento/shared/components/widgets/app_large_text.dart';
 import 'package:monumento/shared/components/widgets/app_text.dart';

@@ -122,7 +122,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       ),
     ),
       backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: ConvexBottomBar(backgroundColor: AppColors.mainColor,),
+      // bottomNavigationBar: ConvexBottomBar(backgroundColor: AppColors.mainColor,),
     );
   }
 

@@ -156,11 +156,8 @@ class _FormBuildState extends State<FormBuild> {
                   Spacer(),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ResetPassword()
-                        )
-                      );
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ResetPassword()));
                     },
                     child: Text(
                       'Forgot Password?',
@@ -254,6 +251,8 @@ class _FormBuildState extends State<FormBuild> {
         duration: Duration(seconds: 4),
         // shape: StadiumBorder(),
         behavior: SnackBarBehavior.floating,
+        margin:
+            EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 100),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       setState(() {

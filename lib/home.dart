@@ -1,20 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:monumento/components/ar/arUs.dart';
+import 'package:monumento/components/categories/categories_home.dart';
 import 'package:monumento/components/homepage/how_to_use.dart';
 import 'package:monumento/components/homepage/reviews.dart';
-import 'package:monumento/components/maps/maps_utils.dart';
 import 'package:monumento/constants/colors.dart';
-import 'package:monumento/d_b_icons_icons.dart';
-import 'package:monumento/models/users.dart';
-import 'package:monumento/network/firebaseServices.dart';
-import 'package:monumento/shared/components/bottomBar.dart';
 import 'package:monumento/shared/components/getAvatar.dart';
 import 'package:monumento/shared/components/menu_widget.dart';
-import 'package:monumento/shared/components/neumorphism.dart';
+import 'package:monumento/shared/components/navigation_drawer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Home extends StatefulWidget {
@@ -51,7 +47,6 @@ class _HomeState extends State<Home> {
     _scrollController.addListener(() {
       changeColor();
     });
-
   }
 
   @override
@@ -74,7 +69,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    if (auth.currentUser == null){
+    if (auth.currentUser == null) {
       return notLoggedIn();
     } else {
       var uid = auth.currentUser!.uid;
@@ -109,185 +104,240 @@ class _HomeState extends State<Home> {
 
   Widget loggedIn(String uid, User user) {
     return Scaffold(
-        body: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(uid).snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                print(snapshot.error);
-                return Text('Something went wrong !');
-              } else if (snapshot.hasData) {
-                var d = snapshot.data as DocumentSnapshot;
-                print(d['image']);
-                return CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    SliverAppBar(
-                      pinned: true,
-                      floating: true,
-                      snap: true,
-                      elevation: !appBar ? 6 : 0,
-                      title: !appBar 
-                      ? Text(
-                        'Athar',
-                        style: TextStyle(
-                          color: AppColors.mainColor
-                        ),
-                        ) 
-                      : Text(''),
-                      centerTitle: true,
-                      actions: [
-                        GetAvatar(
-                          img: d['image'],
-                          name: d['name'],
-                          gender: d['gender'],
-                          email: d['email'],
-                          pass: d['password'],
-                          loggedIn: true,
-                        )
-                      ],
-                      leading: !appBar
-                          ? MenuWidget(color: AppColors.mainColor,)
-                          : Container(
-                              margin: EdgeInsets.only(top: 8, left: 8),
-                              width: 6,
-                              height: 6,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                              ),
-                              child: MenuWidget(
-                                color: AppColors.mainColor,
-                              )),
-                      backgroundColor: appBar
-                          ? AppColors.backgroundColor
-                          : Colors.white,
-                      expandedHeight: 350,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Stack(
-                          alignment: Alignment.bottomLeft,
-                          children: [
-                            CarouselSlider.builder(
-                              options: CarouselOptions(
-                                height: 400,
-                                autoPlay: true,
-                                autoPlayInterval: Duration(seconds: 2),
-                                viewportFraction: 1,
-                                onPageChanged: (index, reason) {
-                                  setState(() => activeIndex = index);
-                                },
-                              ),
-                              itemCount: images.length,
-                              itemBuilder: (context, index, realIndex) {
-                                final img = images[index];
-                                return buildImage(img, index);
+      extendBody: true,
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print(snapshot.error);
+              return Text('Something went wrong !');
+            } else if (snapshot.hasData) {
+              var d = snapshot.data as DocumentSnapshot;
+              print(d['image']);
+              return CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  SliverAppBar(
+                    pinned: true,
+                    floating: true,
+                    snap: true,
+                    elevation: !appBar ? 6 : 0,
+                    title: !appBar
+                        ? Text(
+                            'Athar',
+                            style: TextStyle(color: AppColors.mainColor),
+                          )
+                        : Text(''),
+                    centerTitle: true,
+                    actions: [
+                      GetAvatar(
+                        img: d['image'],
+                        name: d['name'],
+                        gender: d['gender'],
+                        email: d['email'],
+                        pass: d['password'],
+                        loggedIn: true,
+                      )
+                    ],
+                    leading: !appBar
+                        ? MenuWidget(
+                            color: AppColors.mainColor,
+                          )
+                        : Container(
+                            margin: EdgeInsets.only(top: 8, left: 8),
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                            ),
+                            child: MenuWidget(
+                              color: AppColors.mainColor,
+                            )),
+                    backgroundColor:
+                        appBar ? AppColors.backgroundColor : Colors.white,
+                    expandedHeight: 350,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Stack(
+                        alignment: Alignment.bottomLeft,
+                        children: [
+                          CarouselSlider.builder(
+                            options: CarouselOptions(
+                              height: 400,
+                              autoPlay: true,
+                              autoPlayInterval: Duration(seconds: 2),
+                              viewportFraction: 1,
+                              onPageChanged: (index, reason) {
+                                setState(() => activeIndex = index);
                               },
                             ),
-                            buildIndicator()
-                          ],
-                        ),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          HowToUse(),
-                          Reviews(),
-                          Text(
-                            user.email!,
-                            style: TextStyle(fontSize: 20),
+                            itemCount: images.length,
+                            itemBuilder: (context, index, realIndex) {
+                              final img = images[index];
+                              return buildImage(img, index);
+                            },
                           ),
-                          ElevatedButton(
-                              onPressed: () => FirebaseAuth.instance.signOut(),
-                              child: Text('sign out'))
+                          buildIndicator()
                         ],
                       ),
-                    )
-                  ],
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            }),
-        backgroundColor: AppColors.backgroundColor,
-        bottomNavigationBar:
-            ConvexBottomBar(backgroundColor: AppColors.mainColor,));
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        HowToUse(),
+                        Reviews(),
+                        Text(
+                          user.email!,
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        ElevatedButton(
+                            onPressed: () => FirebaseAuth.instance.signOut(),
+                            child: Text('sign out'))
+                      ],
+                    ),
+                  )
+                ],
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
+      backgroundColor: AppColors.backgroundColor,
+      bottomNavigationBar: bottomBar(),
+    );
   }
 
   Widget notLoggedIn() {
     return Scaffold(
-        body: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-              floating: true,
-              snap: true,
-              elevation: 0,
-              title: !appBar ? Text('Athar') : Text(''),
-              actions: [
-                GetAvatar(
-                  img: 'assets/img/avatar.png',
-                  loggedIn: false,
-                ),
-              ],
-              leading: !appBar
-                  ? MenuWidget()
-                  : Container(
-                      margin: EdgeInsets.only(top: 8, left: 8),
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      ),
-                      child: MenuWidget(
-                        color: AppColors.mainColor,
-                      )),
-              backgroundColor:
-                  appBar ? AppColors.backgroundColor : AppColors.mainColor,
-              expandedHeight: 350,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Stack(
-                  alignment: Alignment.bottomLeft,
-                  children: [
-                    CarouselSlider.builder(
-                      options: CarouselOptions(
-                        height: 400,
-                        autoPlay: true,
-                        autoPlayInterval: Duration(seconds: 2),
-                        viewportFraction: 1,
-                        onPageChanged: (index, reason) {
-                          setState(() => activeIndex = index);
-                        },
-                      ),
-                      itemCount: images.length,
-                      itemBuilder: (context, index, realIndex) {
-                        final img = images[index];
-                        return buildImage(img, index);
+      extendBody: true,
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            floating: true,
+            snap: true,
+            elevation: 0,
+            title: !appBar ? Text('Athar') : Text(''),
+            actions: [
+              GetAvatar(
+                img: 'assets/img/avatar.png',
+                loggedIn: false,
+              ),
+            ],
+            leading: !appBar
+                ? MenuWidget()
+                : Container(
+                    margin: EdgeInsets.only(top: 8, left: 8),
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    child: MenuWidget(
+                      color: AppColors.mainColor,
+                    )),
+            backgroundColor:
+                appBar ? AppColors.backgroundColor : AppColors.mainColor,
+            expandedHeight: 350,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Stack(
+                alignment: Alignment.bottomLeft,
+                children: [
+                  CarouselSlider.builder(
+                    options: CarouselOptions(
+                      height: 400,
+                      autoPlay: true,
+                      autoPlayInterval: Duration(seconds: 2),
+                      viewportFraction: 1,
+                      onPageChanged: (index, reason) {
+                        setState(() => activeIndex = index);
                       },
                     ),
-                    buildIndicator()
-                  ],
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  HowToUse(),
-                  Reviews(),
+                    itemCount: images.length,
+                    itemBuilder: (context, index, realIndex) {
+                      final img = images[index];
+                      return buildImage(img, index);
+                    },
+                  ),
+                  buildIndicator()
                 ],
               ),
-            )
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                HowToUse(),
+                Reviews(),
+              ],
+            ),
+          )
+        ],
+      ),
+      backgroundColor: AppColors.backgroundColor,
+      bottomNavigationBar: bottomBar(),
+    );
+  }
+
+  Widget bottomBar() {
+    return Container(
+      decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.black38,
+              blurRadius: 8,
+            ),
           ],
-        ),
-        backgroundColor: AppColors.backgroundColor,
-        bottomNavigationBar:
-            ConvexBottomBar(backgroundColor: AppColors.mainColor));
+      ),
+      child: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        selectedItemColor: AppColors.mainColor,
+        unselectedItemColor: AppColors.mainColor.withOpacity(0.5),
+        iconSize: 25,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        elevation: 16,
+        items: const [
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.camera_alt_rounded,
+              ),
+              label: 'Camera'),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home_filled,
+              ),
+              label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_balance_rounded,
+              ),
+              label: 'Ruins'),
+        ],
+        currentIndex: 1,
+        onTap: (int i) {
+          if (i == 0) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => ArUs()));
+          } else if (i == 2) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => HomeCategories()));
+          }
+          else {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => NavigationDrawer()));
+          }
+        },
+      ),
+    );
   }
 }

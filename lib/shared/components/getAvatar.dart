@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:monumento/components/authentication/sign_in.dart';
 import 'package:monumento/components/authentication/sign_up.dart';
 import 'package:monumento/components/profile/favorites.dart';
@@ -18,13 +20,14 @@ class GetAvatar extends StatefulWidget {
   String? email;
   String? pass;
   final bool loggedIn;
-  GetAvatar({Key? key, 
-  required this.img, 
-  this.email,
-  this.name,
-  this.gender,
-  this.pass,
-  required this.loggedIn})
+  GetAvatar(
+      {Key? key,
+      required this.img,
+      this.email,
+      this.name,
+      this.gender,
+      this.pass,
+      required this.loggedIn})
       : super(key: key);
 
   @override
@@ -73,48 +76,61 @@ class _GetAvatarState extends State<GetAvatar> {
             menuWidth: 180,
             menuItems: [
               FocusedMenuItem(
-                  title: Text('Profile'),
-                  trailingIcon: Icon(Icons.person_outline),
-                  onPressed: () => 
-                    Navigator.of(context).pushAndRemoveUntil(
+                title: Text('Profile'),
+                trailingIcon: Icon(Icons.person_outline),
+                onPressed: () => Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
-                      builder: (context) => 
-                          ProfileScreen(
-                            image: widget.img!,
-                            name: widget.name!,
-                            gender: widget.gender!,
-                            email: widget.email!,
-                            pass: widget.pass!,
-                          )
-                      ),
+                        builder: (context) => ProfileScreen(
+                              image: widget.img!,
+                              name: widget.name!,
+                              gender: widget.gender!,
+                              email: widget.email!,
+                              pass: widget.pass!,
+                            )),
                     (route) => false),
-                ),
+              ),
               FocusedMenuItem(
                   title: Text('Favorites'),
                   trailingIcon: Icon(Icons.bookmark_border),
-                  onPressed: () => 
-                    Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => 
-                          FavoritesScreen(
-                            image: widget.img!,
-                            name: widget.name!,
-                            gender: widget.gender!,
-                            email: widget.email!,
-                            pass: widget.pass!,
-                          )
-                      ),
-                    (route) => false)
-              ),
+                  onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => FavoritesScreen(
+                                image: widget.img!,
+                                name: widget.name!,
+                                gender: widget.gender!,
+                                email: widget.email!,
+                                pass: widget.pass!,
+                              )),
+                      (route) => false)),
               FocusedMenuItem(
                 title: Text('Sign Out'),
                 trailingIcon: Icon(Icons.logout),
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (_) => NavigationDrawer()),
-                      (route) => false);
+                onPressed: () async {
+                  final isLoggedInWithGoogle =
+                      await GoogleSignIn().isSignedIn();
+                  final fbLoggedIn = FacebookAuth.instance.accessToken;
+                  if (isLoggedInWithGoogle) {
+                    GoogleSignIn().disconnect();
+                    FirebaseAuth.instance.signOut();
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (_) => NavigationDrawer()),
+                        (route) => false);
+                  } else if (fbLoggedIn != null) {
+                    await FacebookAuth.instance.logOut();
+                    FirebaseAuth.instance.signOut();
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (_) => NavigationDrawer()),
+                        (route) => false);
+                  }
+                  else {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (_) => NavigationDrawer()),
+                        (route) => false);
+                  }
                 },
               ),
             ],
@@ -135,8 +151,7 @@ class _GetAvatarState extends State<GetAvatar> {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              fit: BoxFit.cover, 
-                              image: getImage())),
+                              fit: BoxFit.cover, image: getImage())),
                     ),
                   ),
                 ),
@@ -150,7 +165,7 @@ class _GetAvatarState extends State<GetAvatar> {
       return AssetImage('assets/img/avatar.png');
     } else if (widget.img!.startsWith('assets/')) {
       return AssetImage(widget.img!);
-    } else if (widget.img!.startsWith('http')){
+    } else if (widget.img!.startsWith('http')) {
       return NetworkImage(widget.img!);
     } else {
       return FileImage(File(widget.img!));

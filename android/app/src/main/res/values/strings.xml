@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resources>
+
+    <string name="app_name">Monumento</string>
+    <string name="facebook_app_id">373903524798100</string>
+    <string name="fb_login_protocol_scheme">fb373903524798100</string>
+    <string name="facebook_client_token">6ccf01c46279729e317531a90788c3ba</string>
+
+</resources>

@@ -73,7 +73,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       emailController.text = widget.email;
       nameController.text = widget.name;
       passController.text = widget.pass;

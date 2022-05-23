@@ -1,51 +1,62 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/components/categories/categories_home.dart';
+import 'package:monumento/components/menu/menu_page.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/navigation_drawer.dart';
 
-class ConvexBottomBar extends StatefulWidget {
-  
+class NavigatorWidget extends StatefulWidget {
   final Color? backgroundColor;
-  
-  const ConvexBottomBar({ 
-    Key? key, this.backgroundColor}) : super(key: key);
+
+  const NavigatorWidget({Key? key, this.backgroundColor}) : super(key: key);
 
   @override
-  State<ConvexBottomBar> createState() => _ConvexBottomBarState();
+  State<NavigatorWidget> createState() => _NavigatorWidgetState();
 }
 
-class _ConvexBottomBarState extends State<ConvexBottomBar> {
+class _NavigatorWidgetState extends State<NavigatorWidget> {
   int selectedPage = 1;
-  final pages = [ArUs(), NavigationDrawer(), HomeCategories()];
+  final pages = [
+    ];
+
   @override
   Widget build(BuildContext context) {
-    return ConvexAppBar(
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
-        elevation: 8,
-        curveSize: 80,
-        top: -12,
-        items: [ 
-          TabItem(
-            icon: Icon(Icons.camera_alt_rounded, color: AppColors.mainColor,),
+        selectedItemColor: AppColors.mainColor,
+        unselectedItemColor: AppColors.mainColor.withOpacity(0.5),
+        iconSize: 25,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        elevation: 16,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.camera_alt_rounded,
+            ),
+            label: 'Camera'
           ),
-          TabItem(
-            icon: Icon(Icons.home_filled, color: AppColors.mainColor,),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home_filled,
+            ),
+            label: 'Home'
           ),
-          TabItem(
-            icon: Icon(Icons.account_balance_rounded, color: AppColors.mainColor,),
-          )
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.account_balance_rounded,
+            ),
+            label: 'Ruins'
+          ),
         ],
-        initialActiveIndex: selectedPage,
-        onTap: (int i){
+        currentIndex: selectedPage,
+        onTap: (int i) {
           setState(() {
             selectedPage = i;
           });
-
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => pages[selectedPage]));
         },
-      );
+      ),
+    );
   }
 }

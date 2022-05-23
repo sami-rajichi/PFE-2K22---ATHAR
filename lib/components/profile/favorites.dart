@@ -193,9 +193,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 ),
               ),
               backgroundColor: AppColors.backgroundColor,
-              bottomNavigationBar: ConvexBottomBar(
-                backgroundColor: AppColors.mainColor,
-              ),
+              // bottomNavigationBar: ConvexBottomBar(
+              //   backgroundColor: AppColors.mainColor,
+              // ),
             );
           } else {
             return const CircularProgressIndicator();

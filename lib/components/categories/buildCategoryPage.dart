@@ -14,7 +14,6 @@ import 'package:monumento/shared/components/description.dart';
 import 'package:monumento/shared/components/neumorphic_image.dart';
 import 'package:monumento/shared/components/neumorphism.dart';
 import 'package:monumento/shared/components/success_alert.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:collection/collection.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -60,8 +59,6 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
   FirebaseAuth auth = FirebaseAuth.instance;
 
   @override

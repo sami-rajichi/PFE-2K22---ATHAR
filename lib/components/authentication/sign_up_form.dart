@@ -1,17 +1,12 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:monumento/components/authentication/sign_in.dart';
 import 'package:monumento/constants/colors.dart';
-import 'package:monumento/home.dart';
-import 'package:monumento/network/firebaseServices.dart';
-import 'package:monumento/shared/components/navigation_drawer.dart';
 import 'package:monumento/shared/components/success_alert.dart';
-import 'package:reactive_dropdown_search/reactive_dropdown_search.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class SignUpFormBuild extends StatefulWidget {
@@ -27,7 +22,6 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
           Validators.required,
           Validators.pattern(r"^[a-zA-Z ,.'-]+$")
         ]),
-        'menu': [Validators.required],
         'email': FormControl<String>(
           validators: [Validators.required, Validators.email],
         ),
@@ -44,6 +38,13 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
   bool isVisible = true;
   bool isVisible2 = true;
   bool loading = false;
+
+  List values = <String>['Woman', 'Man'];
+  String selectedValue = '';
+  final selectedColor = AppColors.mainColor;
+  final unselectedColor = Color(0xFF151624).withOpacity(0.7);
+  final unselectedErrorColor = Colors.red;
+  bool isError = false;
 
   @override
   void initState() {
@@ -74,13 +75,14 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: ReactiveFormBuilder(
         form: buildForm,
         builder: (context, form, child) {
           return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ReactiveTextField<String>(
                 controller: nameController,
@@ -124,47 +126,26 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
                           size: 20,
                         ))),
               ),
-              Container(
-                margin: EdgeInsets.only(
-                  top: 6,
-                ),
-                child: ReactiveDropdownSearch(
-                  formControlName: 'menu',
-                  validationMessages: (control) => {
-                    ValidationMessage.required: 'The gender must not be empty',
-                  },
-                  decoration: InputDecoration(
-                    helperText: '',
-                    border: UnderlineInputBorder(),
-                    hintText: 'Gender',
-                    hintStyle: GoogleFonts.inter(
-                      fontSize: 16.0,
-                      color: const Color(0xFF151624).withOpacity(0.7),
+              Transform.translate(
+                  offset: Offset(0, -6), child: radioButtonField3()),
+              Visibility(
+                visible: isError,
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Transform.translate(
+                      offset: Offset(0, -14),
+                      child: Text(
+                        'The gender must not be empty',
+                        style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ),
-                    filled: true,
-                    fillColor: form.control('menu').isNull
-                        ? const Color.fromRGBO(248, 247, 251, 1)
-                        : Colors.transparent,
-                    prefixIcon: Icon(
-                      Icons.person,
-                      size: 20,
-                    ),
-                    contentPadding: EdgeInsets.fromLTRB(12, 10, 0, 12),
                   ),
-                  mode: Mode.MENU,
-                  hint: 'Gender',
-                  showSelectedItems: true,
-                  items: [
-                    '👩 Woman',
-                    '🧑 Man',
-                  ],
-                  showClearButton: true,
-                  maxHeight: 120,
-                  popupItemDisabled: (String s) => s.startsWith('I'),
                 ),
-              ),
-              const SizedBox(
-                height: 8.0,
               ),
               ReactiveTextField<String>(
                 controller: emailController,
@@ -324,12 +305,16 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
                         size: 24,
                       ),
                       onPressed: () {
-                        if (form.valid) {
-                          signUp(nameController, form.control('menu').value,
-                              emailController, passController, context);
-                          
+                        var valid = form.valid;
+                        if (valid && selectedValue.isNotEmpty) {
+                          signUp(nameController, selectedValue, emailController,
+                              passController, context);
                         } else {
+                          print(selectedValue.isNotEmpty);
                           form.markAllAsTouched();
+                          setState(() {
+                            isError = true;
+                          });
                         }
                       },
                       label: Text('Sign Up',
@@ -347,16 +332,45 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
     );
   }
 
+  Widget radioButtonField3() {
+    return Theme(
+      data: Theme.of(context).copyWith(unselectedWidgetColor: unselectedColor),
+      child: Row(
+        children: values.map((v) {
+          final selected = selectedValue == v;
+          final color = selected ? selectedColor : unselectedColor;
+          return Expanded(
+            child: RadioListTile<String>(
+              value: v,
+              groupValue: selectedValue,
+              onChanged: (value) => setState(() {
+                selectedValue = value!;
+                isError = false;
+              }),
+              activeColor: selectedColor,
+              title: Text(
+                v,
+                style: GoogleFonts.inter(
+                  fontSize: 16.0,
+                  color: color.withOpacity(.8),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   Future signUp(
       TextEditingController name,
       String gender,
       TextEditingController email,
       TextEditingController password,
       BuildContext context) async {
-    
-    FirebaseAuth auth =  FirebaseAuth.instance;
+    FirebaseAuth auth = FirebaseAuth.instance;
     String img = 'assets/img/avatar.png';
-    if (gender.substring(3) == 'Man'){
+    if (gender == 'Man') {
       img = 'assets/img/homme.png';
     } else {
       img = 'assets/img/femme.png';
@@ -370,19 +384,17 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
 
       String uid = auth.currentUser!.uid.toString();
 
-      await FirebaseFirestore.instance.collection('users')
-      .doc(uid).set({
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
         'name': name.text,
-        'gender': gender.substring(3),
+        'gender': gender,
         'email': email.text,
         'password': password.text,
         'image': img,
-        'uid': uid
+        'liked-monuments': FieldValue.arrayUnion([])
       });
 
       Navigator.pushReplacement(
-        context, 
-        MaterialPageRoute(builder: (_) => SignIn()));
+          context, MaterialPageRoute(builder: (_) => SignIn()));
 
       showDialog(
           context: context,
@@ -393,13 +405,11 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
               desc: 'You can login now',
             );
           });
-          
+
       setState(() {
         loading = false;
       });
-    
-
-      } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(
         content: RichText(
             text: TextSpan(children: [
@@ -423,6 +433,8 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
         duration: Duration(seconds: 4),
         // shape: StadiumBorder(),
         behavior: SnackBarBehavior.floating,
+        margin:
+            EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 100),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       setState(() {

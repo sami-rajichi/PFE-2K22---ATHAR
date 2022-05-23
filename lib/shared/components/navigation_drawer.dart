@@ -11,6 +11,7 @@ import 'package:monumento/models/menu_item.dart';
 import 'package:monumento/shared/components/liquid_swipe_navigator.dart';
 
 class NavigationDrawer extends StatefulWidget {
+  
   const NavigationDrawer({Key? key}) : super(key: key);
 
   @override

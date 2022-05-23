@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:flutter/material.dart';
+import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/constants/colors.dart';
-import 'package:monumento/shared/components/bottomBar.dart';
 import 'package:monumento/shared/components/liquid_swipe_navigator.dart';
 import 'package:monumento/shared/components/menu_widget.dart';
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:monumento/shared/components/navigation_drawer.dart';
 
 class HomeCategories extends StatefulWidget {
   const HomeCategories({Key? key}) : super(key: key);
@@ -32,6 +31,7 @@ class _HomeCategoriesState extends State<HomeCategories> {
             'Monumento',
             style: TextStyle(color: AppColors.mainColor),
           ),
+          elevation: 3,
           backgroundColor: Colors.white,
           centerTitle: true,
         ),
@@ -90,42 +90,64 @@ class _HomeCategoriesState extends State<HomeCategories> {
                       ),
                     );
                   }),
-              // GestureDetector(
-              //   child: regionButton('North Monuments'),
-              //   onTap: () {
-              //     setState(() {
-              //       isPressed = !isPressed;
-              //     });
-              //     Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //             builder: (context) =>
-              //                 LiquidSwipeNavigator(region: 'north')));
-              //   },
-              // ),
-              // SizedBox(
-              //   height: 35,
-              // ),
-              // regionButton(
-              //   'Central Monuments',
-              // ),
-              // SizedBox(
-              //   height: 35,
-              // ),
-              // regionButton(
-              //   'Sud Monuments',
-              // ),
-              // SizedBox(
-              //   height: 15,
-              // ),
             ],
           ),
         ),
         backgroundColor: Colors.white,
-        bottomNavigationBar: ConvexBottomBar(
-          backgroundColor: AppColors.mainColor,
-        ));
+        bottomNavigationBar: bottomBar(),
+      );
   }
 
-  
+  Widget bottomBar() {
+    return Container(
+      decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.black38,
+              blurRadius: 8,
+            ),
+          ],
+      ),
+      child: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        selectedItemColor: AppColors.mainColor,
+        unselectedItemColor: AppColors.mainColor.withOpacity(0.5),
+        iconSize: 25,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.camera_alt_rounded,
+              ),
+              label: 'Camera'),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home_filled,
+              ),
+              label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_balance_rounded,
+              ),
+              label: 'Ruins'),
+        ],
+        currentIndex: 2,
+        onTap: (int i) {
+          if (i == 0) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(
+                  builder: (context) => ArUs()));
+          } else if (i == 2) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => HomeCategories()));
+          }
+          else {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => NavigationDrawer()));
+          }
+        },
+      ),
+    );
+  }
 }

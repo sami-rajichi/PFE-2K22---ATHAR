@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monumento/components/profile/body.dart';
 import 'package:monumento/constants/colors.dart';
-import 'package:monumento/shared/components/bottomBar.dart';
 import 'package:monumento/shared/components/navigation_drawer.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -48,7 +47,6 @@ class ProfileScreen extends StatelessWidget {
         email: email,
         pass: pass,),
       backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: ConvexBottomBar(backgroundColor: AppColors.mainColor,),
     );
   }
 }
