@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -71,6 +72,9 @@ class _EditProfileState extends State<EditProfile> {
   bool saved = true;
   late NavigatorState navigatorState;
 
+  final cloudinary =
+      CloudinaryPublic('monumento', 'user-profile-images', cache: false);
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -122,29 +126,54 @@ class _EditProfileState extends State<EditProfile> {
         leading: BackButton(
           color: AppColors.bigTextColor,
           onPressed: () {
-            if (findUpdates() == true) {
-              setState(() {
-                saved = false;
-              });
+            if (fromCloud == true) {
+              final snackBar = SnackBar(
+                content: RichText(
+                    text: TextSpan(children: [
+                  const TextSpan(
+                      text: 'Image Still Loading\n\n',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white)),
+                  TextSpan(
+                      text: 'Wait till the image ends loading',
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white)),
+                ])),
+                backgroundColor: Colors.redAccent,
+                duration: Duration(seconds: 2),
+                // shape: StadiumBorder(),
+                behavior: SnackBarBehavior.floating,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             } else {
-              setState(() {
-                saved = true;
-              });
-            }
-            if (saved) {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ProfileScreen(
-                      image: imgPath!,
-                      name: nameBU!,
-                      gender: widget.gender,
-                      email: emailBU!,
-                      pass: passBU!)));
-            } else {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return saveAlert();
-                  });
+              if (findUpdates() == true) {
+                setState(() {
+                  saved = false;
+                });
+              } else {
+                setState(() {
+                  saved = true;
+                });
+              }
+              if (saved) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ProfileScreen(
+                        image: imgPath!,
+                        name: nameBU!,
+                        gender: widget.gender,
+                        email: emailBU!,
+                        pass: passBU!)));
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return saveAlert();
+                    });
+              }
             }
           },
         ),
@@ -260,11 +289,38 @@ class _EditProfileState extends State<EditProfile> {
                                     borderRadius: BorderRadius.circular(50)),
                               ),
                               onPressed: () {
-                                if (form.valid) {
-                                  update(nameController, emailController,
-                                      passController, context);
+                                if (fromCloud == true) {
+                                  final snackBar = SnackBar(
+                                    content: RichText(
+                                        text: TextSpan(children: [
+                                      const TextSpan(
+                                          text: 'Image Still Loading\n\n',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white)),
+                                      TextSpan(
+                                          text:
+                                              'Wait till the image ends loading',
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.normal,
+                                              color: Colors.white)),
+                                    ])),
+                                    backgroundColor: Colors.redAccent,
+                                    duration: Duration(seconds: 2),
+                                    // shape: StadiumBorder(),
+                                    behavior: SnackBarBehavior.floating,
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
                                 } else {
-                                  form.markAllAsTouched();
+                                  if (form.valid) {
+                                    update(nameController, emailController,
+                                        passController, context);
+                                  } else {
+                                    form.markAllAsTouched();
+                                  }
                                 }
                               },
                               child: Text(
@@ -400,26 +456,63 @@ class _EditProfileState extends State<EditProfile> {
     return urlDownload;
   }
 
+  Future uploadFile2(String name, String filePath) async {
+    CloudinaryResponse? response;
+    try {
+      response = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(filePath,
+            resourceType: CloudinaryResourceType.Image,
+            folder: 'user-profile-images/'),
+      );
+    } on CloudinaryException catch (e) {
+      final snackBar = SnackBar(
+        content: RichText(
+            text: TextSpan(children: [
+          const TextSpan(
+              text: 'Update Failed\n\n',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)),
+          TextSpan(
+              text: e.message,
+              style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white)),
+        ])),
+        backgroundColor: Colors.redAccent,
+        duration: Duration(seconds: 4),
+        // shape: StadiumBorder(),
+        behavior: SnackBarBehavior.floating,
+        margin:
+            EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 90),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
+    return response!.secureUrl;
+  }
+
   Future pickImage() async {
     try {
       final source = await showImageSource(context);
-      final image = await ImagePicker().pickImage(source: source!);
+      final image =
+          await ImagePicker().pickImage(source: source!, imageQuality: 15);
       if (image == null) return widget.image;
 
       final tempImg = File(image.path);
       setState(() {
         fromCloud = true;
       });
-      final urlDownload = await uploadFile(image.name, image.path);
-      setState(() {
-        fromCloud = false;
-      });
+      final urlDownload = await uploadFile2(image.name, image.path);
+
       setState(() {
         imgPicked = tempImg;
         imgPath = urlDownload;
+        fromCloud = false;
       });
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
       final snackBar = SnackBar(
         content: RichText(
             text: TextSpan(children: [
@@ -513,13 +606,19 @@ class _EditProfileState extends State<EditProfile> {
         'password': password.text,
         'image': imgPath,
       });
+
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return UpdatedAlert(
               header: 'assets/animations/done.json',
               title: 'Account updated successfully',
-              desc: 'You can login now',
+              desc: 'Enjoy the experience',
+              image: imgPath!,
+              name: widget.name,
+              gender: widget.gender,
+              email: widget.email,
+              pass: widget.pass,
             );
           });
 
@@ -555,6 +654,8 @@ class _EditProfileState extends State<EditProfile> {
         duration: Duration(seconds: 4),
         // shape: StadiumBorder(),
         behavior: SnackBarBehavior.floating,
+        margin:
+            EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 90),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       setState(() {
@@ -567,8 +668,7 @@ class _EditProfileState extends State<EditProfile> {
     if (emailBU == emailController.text &&
         nameBU == nameController.text &&
         passBU == passController.text &&
-        imgPath! == imgBU &&
-        fromCloud == false) {
+        imgPath! == imgBU) {
       return false;
     }
     return true;
@@ -656,13 +756,7 @@ class _EditProfileState extends State<EditProfile> {
                                 onPressed: () {
                                   update(nameController, emailController,
                                       passController, context);
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ProfileScreen(
-                                          image: imgPath!,
-                                          name: nameBU!,
-                                          gender: widget.gender,
-                                          email: emailBU!,
-                                          pass: passBU!)));
+                                  Navigator.of(context).pop();
                                 },
                                 child: Text(
                                   "SAVE",

@@ -48,6 +48,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ThemeData()
                 .colorScheme
                 .copyWith(primary: AppColors.mainColor),
+      pageTransitionsTheme: PageTransitionsTheme(builders: {
+    TargetPlatform.iOS: FadeTransitionBuilder(),
+    TargetPlatform.android: FadeTransitionBuilder(),
+  }),
       ),
       scrollBehavior: MaterialScrollBehavior().copyWith(
         dragDevices: {
@@ -61,3 +65,13 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+class FadeTransitionBuilder extends PageTransitionsBuilder {
+
+  FadeTransitionBuilder() : super();
+  @override
+  Widget buildTransitions<T>(_, __, animation, ___, child) => 
+        FadeTransition(opacity: animation, child: child);
+}
+
+// FadeTransition(opacity: animation, child: child)

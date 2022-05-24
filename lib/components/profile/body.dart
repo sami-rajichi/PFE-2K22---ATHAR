@@ -182,13 +182,13 @@ class _BodyState extends State<Body> {
                         (route) => false);
                   } else if (fbLoggedIn != null) {
                     await FacebookAuth.instance.logOut();
-                    FirebaseAuth.instance.signOut();
+                    await FirebaseAuth.instance.signOut();
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (_) => NavigationDrawer()),
                         (route) => false);
                   } else {
-                    FirebaseAuth.instance.signOut();
+                    await FirebaseAuth.instance.signOut();
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (_) => NavigationDrawer()),

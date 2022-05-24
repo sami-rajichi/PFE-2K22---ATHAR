@@ -153,7 +153,6 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
-              
             ],
           ),
         ),
@@ -312,56 +311,51 @@ class _SignInState extends State<SignIn> {
       final LoginResult loginResult = await FacebookAuth.instance.login();
 
       final OAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(
-            loginResult.accessToken!.token);
+          FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
-      UserCredential userCredential = await _auth.signInWithCredential(
-        facebookAuthCredential);
+      UserCredential userCredential =
+          await _auth.signInWithCredential(facebookAuthCredential);
 
       User user = userCredential.user!;
-        if (userCredential.additionalUserInfo!.isNewUser) {
-          if (userCredential.additionalUserInfo!.isNewUser) {
-          if (user != null) {
-            GoogleSignIn().disconnect();
-            user.delete();
-            _auth.signOut();
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => SignUp()));
+      if (userCredential.additionalUserInfo!.isNewUser) {
+        await FacebookAuth.instance.logOut();
+        user.delete();
+        _auth.signOut();
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => SignUp()));
 
-            final snackBar = SnackBar(
-              content: RichText(
-                  text: TextSpan(children: [
-                const TextSpan(
-                    text: 'Account Doesn\'t Exist\n\n',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white)),
-                TextSpan(
-                    text: 'Go ahead and sign up please',
-                    style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.white)),
-              ])),
-              backgroundColor: Colors.redAccent,
-              duration: Duration(seconds: 4),
-              behavior: SnackBarBehavior.floating,
-              margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).size.height - 90),
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
-        } else {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => NavigationDrawer()));
+        final snackBar = SnackBar(
+          content: RichText(
+              text: TextSpan(children: [
+            const TextSpan(
+                text: 'Account Doesn\'t Exist\n\n',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
+            TextSpan(
+                text: 'Go ahead and sign up please',
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white)),
+          ])),
+          backgroundColor: Colors.redAccent,
+          duration: Duration(seconds: 4),
+          behavior: SnackBarBehavior.floating,
+          margin:
+              EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 90),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => NavigationDrawer()));
 
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return SuccessAlert();
-              });
-        }
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SuccessAlert();
+            });
       }
     } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(

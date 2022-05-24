@@ -156,7 +156,6 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-
             ],
           ),
         ),
@@ -290,7 +289,6 @@ class _SignUpState extends State<SignUp> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
           GoogleSignIn().disconnect();
-
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -330,68 +328,64 @@ class _SignUpState extends State<SignUp> {
       final LoginResult loginResult = await FacebookAuth.instance.login();
 
       final OAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(
-            loginResult.accessToken!.token);
+          FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
-      UserCredential userCredential = await _auth.signInWithCredential(
-        facebookAuthCredential);
+      UserCredential userCredential =
+          await _auth.signInWithCredential(facebookAuthCredential);
 
       User user = userCredential.user!;
-        if (userCredential.additionalUserInfo!.isNewUser) {
-          if (user != null) {
-            String uid = user.uid;
+      if (userCredential.additionalUserInfo!.isNewUser) {
+        String uid = user.uid;
 
-            await FirebaseFirestore.instance.collection('users').doc(uid).set({
-              'name': user.displayName,
-              'gender': '',
-              'email': user.email,
-              'password': '',
-              'image': user.photoURL,
-              'liked-monuments': FieldValue.arrayUnion([])
+        await FirebaseFirestore.instance.collection('users').doc(uid).set({
+          'name': user.displayName,
+          'gender': '',
+          'email': user.email,
+          'password': '',
+          'image': user.photoURL,
+          'liked-monuments': FieldValue.arrayUnion([])
+        });
+
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => NavigationDrawer()));
+
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SuccessAlert();
             });
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => SignIn()));
 
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => NavigationDrawer()));
+        final snackBar = SnackBar(
+          content: RichText(
+              text: TextSpan(children: [
+            const TextSpan(
+                text: 'Account Already Exists\n\n',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
+            TextSpan(
+                text:
+                    'Either try to login with this account, or create a new one',
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white)),
+          ])),
+          backgroundColor: Colors.redAccent,
+          duration: Duration(seconds: 4),
+          // shape: StadiumBorder(),
+          behavior: SnackBarBehavior.floating,
+          margin:
+              EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 90),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return SuccessAlert();
-                });
-          }
-        } else {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => SignIn()));
-
-          final snackBar = SnackBar(
-            content: RichText(
-                text: TextSpan(children: [
-              const TextSpan(
-                  text: 'Account Already Exists\n\n',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
-              TextSpan(
-                  text:
-                      'Either try to login with this account, or create a new one',
-                  style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white)),
-            ])),
-            backgroundColor: Colors.redAccent,
-            duration: Duration(seconds: 4),
-            // shape: StadiumBorder(),
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context).size.height - 90),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-          GoogleSignIn().disconnect();
-
-        }
+        GoogleSignIn().disconnect();
+      }
     } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(
         content: RichText(
