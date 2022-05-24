@@ -1,25 +1,21 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:monumento/components/ar/arUs.dart';
-import 'package:monumento/components/categories/buildCategoryPage.dart';
 import 'package:monumento/components/categories/categories_home.dart';
-import 'package:monumento/components/categories/ruins_home_navigator.dart';
 import 'package:monumento/components/menu/menu_page.dart';
 import 'package:monumento/home.dart';
 import 'package:monumento/models/menu_item.dart';
-import 'package:monumento/shared/components/liquid_swipe_navigator.dart';
 
-class NavigationDrawer extends StatefulWidget {
+class RuinsNavigator extends StatefulWidget {
   
-  const NavigationDrawer({Key? key}) : super(key: key);
+  const RuinsNavigator({Key? key}) : super(key: key);
 
   @override
-  State<NavigationDrawer> createState() => _NavigationDrawerState();
+  State<RuinsNavigator> createState() => _RuinsNavigatorState();
 }
 
-class _NavigationDrawerState extends State<NavigationDrawer> {
-  MI currentItem = MenuItems.home;
+class _RuinsNavigatorState extends State<RuinsNavigator> {
+  MI currentItem = MenuItems.category;
   @override
   Widget build(BuildContext context) {
     return ZoomDrawer(
@@ -52,7 +48,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       case MenuItems.ar:
         return ArUs();
       case MenuItems.category:
-        return RuinsNavigator();
+        return HomeCategories();
       case MenuItems.help:
         return Home();
       case MenuItems.update:

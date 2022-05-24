@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/components/categories/categories_home.dart';
+import 'package:monumento/components/categories/ruins_home_navigator.dart';
 import 'package:monumento/components/homepage/how_to_use.dart';
 import 'package:monumento/components/homepage/reviews.dart';
 import 'package:monumento/constants/colors.dart';
@@ -330,7 +331,7 @@ class _HomeState extends State<Home> {
                 .push(MaterialPageRoute(builder: (context) => ArUs()));
           } else if (i == 2) {
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => HomeCategories()));
+                .push(MaterialPageRoute(builder: (context) => RuinsNavigator()));
           }
           else {
             Navigator.of(context)

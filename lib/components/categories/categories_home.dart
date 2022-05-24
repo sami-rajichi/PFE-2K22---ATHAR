@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monumento/components/ar/arUs.dart';
+import 'package:monumento/components/categories/ruins_home_navigator.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/liquid_swipe_navigator.dart';
 import 'package:monumento/shared/components/menu_widget.dart';
@@ -140,7 +141,7 @@ class _HomeCategoriesState extends State<HomeCategories> {
                   builder: (context) => ArUs()));
           } else if (i == 2) {
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => HomeCategories()));
+                .push(MaterialPageRoute(builder: (context) => RuinsNavigator()));
           }
           else {
             Navigator.of(context)

@@ -7,7 +7,6 @@ import 'package:monumento/components/profile/edit_profile.dart';
 import 'package:monumento/components/profile/profile_screen.dart';
 import 'package:monumento/components/profile/specific_monument.dart';
 import 'package:monumento/constants/colors.dart';
-import 'package:monumento/shared/components/bottomBar.dart';
 
 class FavoritesScreen extends StatefulWidget {
   final String image;

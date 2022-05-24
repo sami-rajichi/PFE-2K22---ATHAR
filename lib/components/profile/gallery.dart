@@ -1,11 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:monumento/components/profile/body.dart';
 import 'package:monumento/components/profile/edit_profile.dart';
 import 'package:monumento/constants/colors.dart';
-import 'package:monumento/shared/components/bottomBar.dart';
-import 'package:monumento/shared/components/navigation_drawer.dart';
 
 class GalleryScreen extends StatefulWidget {
   final String image;
