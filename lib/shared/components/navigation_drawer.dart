@@ -1,14 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:monumento/components/ar/arUs.dart';
-import 'package:monumento/components/categories/buildCategoryPage.dart';
 import 'package:monumento/components/categories/categories_home.dart';
 import 'package:monumento/components/categories/ruins_home_navigator.dart';
+import 'package:monumento/components/maps/maps_utils.dart';
 import 'package:monumento/components/menu/menu_page.dart';
 import 'package:monumento/home.dart';
 import 'package:monumento/models/menu_item.dart';
-import 'package:monumento/shared/components/liquid_swipe_navigator.dart';
+import 'package:store_redirect/store_redirect.dart';
 
 class NavigationDrawer extends StatefulWidget {
   
@@ -24,7 +23,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   Widget build(BuildContext context) {
     return ZoomDrawer(
         slideWidth: MediaQuery.of(context).size.width * 0.77,
-        angle: -8,
         showShadow: true,
         backgroundColor: Color.fromRGBO(251, 192, 45, 1),
         style: DrawerStyle.Style1,
@@ -35,8 +33,14 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           builder: (context) => MenuPage(
             currentItem: currentItem,
             onSelectedItem: (item) {
-              setState(() => currentItem = item);
-              ZoomDrawer.of(context)!.close();
+              if (item == MenuItems.rateUs){
+                setState(() => currentItem = item);
+                MapUtils.storeRedirection();
+                ZoomDrawer.of(context)!.close();
+              } else {
+                setState(() => currentItem = item);
+                ZoomDrawer.of(context)!.close();
+              }
             },
           ),
         ),
@@ -52,8 +56,8 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       case MenuItems.ar:
         return ArUs();
       case MenuItems.category:
-        return RuinsNavigator();
-      case MenuItems.help:
+        return HomeCategories();
+      case MenuItems.rateUs:
         return Home();
       case MenuItems.update:
         return Home();

@@ -5,20 +5,20 @@ import 'package:monumento/models/menu_item.dart';
 class MenuItems {
   static const home = MI('Home', Icons.home);
   static const map = MI('Map', DBIcons.map);
-  static const ar = MI('Augmented Reality', DBIcons.augmented_reality);
-  static const category = MI('Archeological Sites', Icons.category);
-  static const help = MI('Help', Icons.help);
-  static const update = MI('Update', Icons.update);
+  static const ar = MI('Camera', Icons.camera);
+  static const category = MI('Archeological Sites', Icons.account_balance_rounded);
+  static const update = MI('Changelog', Icons.update_rounded);
   static const aboutUs = MI('About Us', Icons.info_outlined);
+  static const rateUs = MI('Rate Us', Icons.reviews_rounded);
 
   static const all = <MI>[
     home,
     map,
     ar,
     category,
-    help,
     update,
-    aboutUs
+    aboutUs,
+    rateUs,
   ];
 }
 

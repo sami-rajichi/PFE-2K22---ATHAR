@@ -64,9 +64,17 @@ class _GetAvatarState extends State<GetAvatar> {
                 child: CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.white,
-                  child: Image.asset(
-                    widget.img!,
-                    fit: BoxFit.cover,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(80),
+                    child: Container(
+                      width: 35,
+                      height: 35,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage(widget.img!))),
+                    ),
                   ),
                 ),
               ),
@@ -123,8 +131,7 @@ class _GetAvatarState extends State<GetAvatar> {
                         context,
                         MaterialPageRoute(builder: (_) => NavigationDrawer()),
                         (route) => false);
-                  }
-                  else {
+                  } else {
                     await FirebaseAuth.instance.signOut();
                     Navigator.pushAndRemoveUntil(
                         context,

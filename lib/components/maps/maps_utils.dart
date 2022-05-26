@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -12,6 +14,26 @@ class MapUtils {
       googleMapUrl,
       mode: LaunchMode.externalApplication
       )) throw 'Could not launch $googleMapUrl';
+    
+  }
+
+  static Future<void> storeRedirection() async {
+    final playStore = 
+    Uri.parse("https://play.google.com/store/apps?hl=fr&gl=US");
+    final appStore = 
+    Uri.parse("https://www.apple.com/fr/app-store/");
+
+    if (Platform.isAndroid){
+      if (!await launchUrl(
+      playStore,
+      mode: LaunchMode.externalApplication
+      )) throw 'Could not launch $playStore';
+    } else {
+      if (!await launchUrl(
+      appStore,
+      mode: LaunchMode.externalApplication
+      )) throw 'Could not launch $appStore';
+    }
     
   }
 
