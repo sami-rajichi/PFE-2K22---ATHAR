@@ -191,7 +191,7 @@ class _HomeState extends State<Home> {
                     child: Column(
                       children: [
                         HowToUse(),
-                        Reviews(),
+                        ReviewsScreen(),
                         Text(
                           user.email!,
                           style: TextStyle(fontSize: 20),
@@ -278,7 +278,7 @@ class _HomeState extends State<Home> {
             child: Column(
               children: [
                 HowToUse(),
-                Reviews(),
+                ReviewsScreen(),
               ],
             ),
           )

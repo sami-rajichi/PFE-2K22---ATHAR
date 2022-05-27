@@ -167,7 +167,7 @@ class _CategoryPageState extends State<CategoryPage> {
                         ),
                         getButtons(),
                         SizedBox(
-                          height: 8,
+                          height: 10,
                         ),
                       ],
                     )),
@@ -284,7 +284,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                 ),
                                 getButtons(),
                                 SizedBox(
-                                  height: 8,
+                                  height: 10,
                                 ),
                               ],
                             )),
@@ -313,7 +313,7 @@ class _CategoryPageState extends State<CategoryPage> {
               icon: Icon(
                 Icons.read_more_rounded,
                 color: AppColors.mainColor,
-                size: 12,
+                size: 16,
               ),
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: AppColors.mainColor),

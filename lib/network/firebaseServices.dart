@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:monumento/models/monuments.dart';
-import 'package:monumento/models/users.dart';
+import 'package:monumento/models/reviews.dart';
 
 class FirebaseServices {
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   CollectionReference firebaseFirestore = FirebaseFirestore.instance.collection('north_monuments');
+  CollectionReference reviewsFirestore = FirebaseFirestore.instance.collection('users_reviews');
   CollectionReference userFirestore = FirebaseFirestore.instance.collection('users');
 
   Stream<DocumentSnapshot> getUser(String? id) {
@@ -28,6 +26,12 @@ class FirebaseServices {
     return firebaseFirestore.snapshots().map((snapshot) => 
                  snapshot.docs.map((doc) => 
                  Monument.fromJson(doc.data() as Map<String, dynamic>)).toList());
+  }
+
+  Stream<List<Review>> getReviews() {
+    return reviewsFirestore.snapshots().map((snapshot) => 
+                 snapshot.docs.map((doc) => 
+                 Review.fromJson(doc.data() as Map<String, dynamic>)).toList());
   }
 
   Future<String> getFileUrl(String fileName) async {

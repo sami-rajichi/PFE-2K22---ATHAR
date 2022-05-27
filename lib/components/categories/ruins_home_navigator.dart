@@ -22,7 +22,7 @@ class _RuinsNavigatorState extends State<RuinsNavigator> {
     return ZoomDrawer(
         slideWidth: MediaQuery.of(context).size.width * 0.77,
         showShadow: true,
-        backgroundColor: Color.fromRGBO(251, 192, 45, 1),
+        backgroundColor: Colors.white38,
         style: DrawerStyle.Style1,
         openCurve: Curves.fastOutSlowIn,
         duration: Duration(milliseconds: 500),
