@@ -54,7 +54,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
               options: CarouselOptions(
                 height: 420,
                 autoPlay: true,
-                autoPlayInterval: Duration(seconds: 5),
+                autoPlayInterval: Duration(seconds: 10),
                 viewportFraction: 1,
                 onPageChanged: (index, reason) {
                   setState(() => activeIndex = index);
@@ -129,7 +129,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                           fontWeight: FontWeight.w300,
                           color: AppColors.bigTextColor,
                         ),
-                        child: AnimatedTextKit(animatedTexts: [
+                        child: AnimatedTextKit(
+                          isRepeatingAnimation: false,
+                          animatedTexts: [
                           TypewriterAnimatedText(review['review'],
                               speed: Duration(milliseconds: 15)),
                         ]),

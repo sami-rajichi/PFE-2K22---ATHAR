@@ -8,8 +8,8 @@ class MenuItems {
   static const ar = MI('Camera', Icons.camera);
   static const category = MI('Archeological Sites', Icons.account_balance_rounded);
   static const update = MI('Changelog', Icons.update_rounded);
-  static const aboutUs = MI('About Us', Icons.info_outlined);
-  static const rateUs = MI('Rate Us', Icons.reviews_rounded);
+  static const requestHelp = MI('Request Help', Icons.assistant);
+  static const rateUs = MI('Rate Us', Icons.feedback_sharp);
 
   static const all = <MI>[
     home,
@@ -17,7 +17,7 @@ class MenuItems {
     ar,
     category,
     update,
-    aboutUs,
+    requestHelp,
     rateUs,
   ];
 }

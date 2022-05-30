@@ -5,9 +5,9 @@ import 'package:monumento/components/categories/categories_home.dart';
 import 'package:monumento/components/categories/ruins_home_navigator.dart';
 import 'package:monumento/components/maps/maps_utils.dart';
 import 'package:monumento/components/menu/menu_page.dart';
+import 'package:monumento/components/request_help/request_help.dart';
 import 'package:monumento/home.dart';
 import 'package:monumento/models/menu_item.dart';
-import 'package:store_redirect/store_redirect.dart';
 
 class NavigationDrawer extends StatefulWidget {
   
@@ -61,8 +61,8 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         return Home();
       case MenuItems.update:
         return Home();
-      case MenuItems.aboutUs:
-        return Home();
+      case MenuItems.requestHelp:
+        return RequestHelp();
     }
   }
 }
