@@ -59,6 +59,7 @@ dependencies:
   flutter_form_builder: ^7.2.1
   dropdown_search: ^4.0.1
   http: ^0.13.4
+  timeline_tile: ^2.0.0
 
 dev_dependencies:
   flutter_test:
