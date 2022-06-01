@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:lottie/lottie.dart';
+import 'package:monumento/components/request_help/request_help_navigator.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/menu_widget.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -590,7 +591,7 @@ class _RequestHelpState extends State<RequestHelp> {
     const templateId = 'template_7px4rnn';
     const userId = 'wboHp6njrVdV8c9en';
     final name = email.text;
-    final subject = kindOfSupport == 'Other' ? ' An issue from ' + email.text : kindOfSupport + ' from ' + email.text;
+    final subject = kindOfSupport == 'Other' ? ' An issue from ' + email.text : kindOfSupport + ' to ' + email.text;
     final issue = feedbackController.text;
     final response = await http.post(
       url,
@@ -648,7 +649,7 @@ class _RequestHelpState extends State<RequestHelp> {
                   ElevatedButton(onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => RequestHelp())
+                        builder: (context) => RequestHelpNavigator())
                     );
                   },
                     style: ElevatedButton.styleFrom(

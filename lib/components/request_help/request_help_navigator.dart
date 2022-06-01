@@ -8,16 +8,16 @@ import 'package:monumento/components/request_help/request_help.dart';
 import 'package:monumento/home.dart';
 import 'package:monumento/models/menu_item.dart';
 
-class NavigationDrawer extends StatefulWidget {
+class RequestHelpNavigator extends StatefulWidget {
   
-  const NavigationDrawer({Key? key}) : super(key: key);
+  const RequestHelpNavigator({Key? key}) : super(key: key);
 
   @override
-  State<NavigationDrawer> createState() => _NavigationDrawerState();
+  State<RequestHelpNavigator> createState() => _RequestHelpNavigatorState();
 }
 
-class _NavigationDrawerState extends State<NavigationDrawer> {
-  MI currentItem = MenuItems.home;
+class _RequestHelpNavigatorState extends State<RequestHelpNavigator> {
+  MI currentItem = MenuItems.requestHelp;
   @override
   Widget build(BuildContext context) {
     return ZoomDrawer(
