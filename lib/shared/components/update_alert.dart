@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:monumento/components/admin_dashboard/admin_navigator.dart';
 import 'package:monumento/components/profile/profile_screen.dart';
 import 'package:monumento/constants/colors.dart';
 
@@ -60,13 +62,18 @@ class UpdatedAlert extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ProfileScreen(
-                                image: image,
-                                name: name,
-                                gender: gender,
-                                email: email,
-                                pass: pass)));
+                        FirebaseAuth.instance.currentUser != null &&
+                                FirebaseAuth.instance.currentUser!.email ==
+                                    'admin-athar@gmail.com'
+                            ? Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => AdminNavigator()))
+                            : Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ProfileScreen(
+                                    image: image,
+                                    name: name,
+                                    gender: gender,
+                                    email: email,
+                                    pass: pass)));
                       },
                       style: ElevatedButton.styleFrom(
                           primary: AppColors.mainColor,

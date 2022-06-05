@@ -433,8 +433,6 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
         duration: Duration(seconds: 4),
         // shape: StadiumBorder(),
         behavior: SnackBarBehavior.floating,
-        margin:
-            EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 100),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       setState(() {

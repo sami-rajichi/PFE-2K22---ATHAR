@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:monumento/components/admin_dashboard/admin_ruins_navigator.dart';
 import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/components/categories/ruins_home_navigator.dart';
 import 'package:monumento/constants/colors.dart';
@@ -102,12 +104,12 @@ class _HomeCategoriesState extends State<HomeCategories> {
   Widget bottomBar() {
     return Container(
       decoration: BoxDecoration(
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.black38,
-              blurRadius: 8,
-            ),
-          ],
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black38,
+            blurRadius: 8,
+          ),
+        ],
       ),
       child: BottomNavigationBar(
         backgroundColor: Colors.white,
@@ -116,6 +118,7 @@ class _HomeCategoriesState extends State<HomeCategories> {
         iconSize: 25,
         showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
+        elevation: 16,
         items: const [
           BottomNavigationBarItem(
               icon: Icon(
@@ -137,15 +140,16 @@ class _HomeCategoriesState extends State<HomeCategories> {
         onTap: (int i) {
           if (i == 0) {
             Navigator.of(context)
-                .push(MaterialPageRoute(
-                  builder: (context) => ArUs()));
+                .push(MaterialPageRoute(builder: (context) => ArUs()));
           } else if (i == 2) {
-            Navigator.of(context)
+            FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser!.email == 'admin-athar@gmail.com'
+            ? Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => AdminRuinsNavigator()))
+            : Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => RuinsNavigator()));
-          }
-          else {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => NavigationDrawer()));
+            } else {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => NavigationDrawer()));
           }
         },
       ),

@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:monumento/components/admin_dashboard/admin_homepage.dart';
+import 'package:monumento/components/admin_dashboard/admin_navigator.dart';
+import 'package:monumento/components/admin_dashboard/admin_ruins_navigator.dart';
 import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/components/categories/categories_home.dart';
 import 'package:monumento/components/categories/ruins_home_navigator.dart';
@@ -74,7 +77,11 @@ class _HomeState extends State<Home> {
       return notLoggedIn();
     } else {
       var uid = auth.currentUser!.uid;
-      return loggedIn(uid, auth.currentUser!);
+      if (auth.currentUser!.email == 'admin-athar@gmail.com') {
+        return AdminNavigator();
+      } else {
+        return loggedIn(uid, auth.currentUser!);
+      }
     }
   }
 
@@ -117,7 +124,6 @@ class _HomeState extends State<Home> {
               return Text('Something went wrong !');
             } else if (snapshot.hasData) {
               var d = snapshot.data as DocumentSnapshot;
-              print(d['image']);
               return CustomScrollView(
                 controller: _scrollController,
                 slivers: [
@@ -279,6 +285,7 @@ class _HomeState extends State<Home> {
               children: [
                 HowToUse(),
                 ReviewsScreen(),
+                SizedBox(height: 66,)
               ],
             ),
           )
@@ -292,12 +299,12 @@ class _HomeState extends State<Home> {
   Widget bottomBar() {
     return Container(
       decoration: BoxDecoration(
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.black38,
-              blurRadius: 8,
-            ),
-          ],
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black38,
+            blurRadius: 8,
+          ),
+        ],
       ),
       child: BottomNavigationBar(
         backgroundColor: Colors.white,
@@ -330,12 +337,14 @@ class _HomeState extends State<Home> {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => ArUs()));
           } else if (i == 2) {
-            Navigator.of(context)
+            FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser!.email == 'admin-athar@gmail.com'
+            ? Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => AdminRuinsNavigator()))
+            : Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => RuinsNavigator()));
-          }
-          else {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => NavigationDrawer()));
+            } else {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => NavigationDrawer()));
           }
         },
       ),

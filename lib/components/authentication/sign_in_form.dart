@@ -2,6 +2,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:monumento/components/admin_dashboard/admin_homepage.dart';
+import 'package:monumento/components/admin_dashboard/admin_navigator.dart';
 import 'package:monumento/components/authentication/reset_password.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/home.dart';
@@ -219,8 +221,15 @@ class _FormBuildState extends State<FormBuild> {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email.text.trim(), password: password.text.trim());
 
-      Navigator.pushReplacement(
+      if (email.text.trim() == 'admin-athar@gmail.com'){
+        Navigator.pushReplacement(
+          context, MaterialPageRoute(
+            builder: (_) => AdminNavigator()));
+      }
+      else {
+        Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => NavigationDrawer()));
+      }
 
       showDialog(
           context: context,
@@ -251,8 +260,6 @@ class _FormBuildState extends State<FormBuild> {
         duration: Duration(seconds: 4),
         // shape: StadiumBorder(),
         behavior: SnackBarBehavior.floating,
-        margin:
-            EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 100),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       setState(() {

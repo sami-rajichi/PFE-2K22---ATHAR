@@ -317,8 +317,6 @@ class _SignUpState extends State<SignUp> {
             duration: Duration(seconds: 4),
             // shape: StadiumBorder(),
             behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context).size.height - 90),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
@@ -349,8 +347,6 @@ class _SignUpState extends State<SignUp> {
         duration: Duration(seconds: 4),
         // shape: StadiumBorder(),
         behavior: SnackBarBehavior.floating,
-        margin:
-            EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 90),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
@@ -420,8 +416,6 @@ class _SignUpState extends State<SignUp> {
           duration: Duration(seconds: 4),
           // shape: StadiumBorder(),
           behavior: SnackBarBehavior.floating,
-          margin:
-              EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 90),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
@@ -451,8 +445,6 @@ class _SignUpState extends State<SignUp> {
         duration: Duration(seconds: 4),
         // shape: StadiumBorder(),
         behavior: SnackBarBehavior.floating,
-        margin:
-            EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 90),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }

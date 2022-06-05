@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:monumento/components/admin_dashboard/admin_ruins_navigator.dart';
 import 'package:monumento/components/categories/categories_home.dart';
+import 'package:monumento/components/categories/ruins_home_navigator.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/navigation_drawer.dart';
 
@@ -32,12 +35,12 @@ class _ArUsState extends State<ArUs> {
   Widget bottomBar() {
     return Container(
       decoration: BoxDecoration(
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.black38,
-              blurRadius: 8,
-            ),
-          ],
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black38,
+            blurRadius: 8,
+          ),
+        ],
       ),
       child: BottomNavigationBar(
         backgroundColor: Colors.white,
@@ -70,12 +73,14 @@ class _ArUsState extends State<ArUs> {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => ArUs()));
           } else if (i == 2) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => HomeCategories()));
-          }
-          else {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => NavigationDrawer()));
+            FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser!.email == 'admin-athar@gmail.com'
+            ? Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => AdminRuinsNavigator()))
+            : Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => RuinsNavigator()));
+            } else {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => NavigationDrawer()));
           }
         },
       ),

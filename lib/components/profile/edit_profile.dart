@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
+import 'package:monumento/components/admin_dashboard/admin_navigator.dart';
 import 'package:monumento/components/profile/profile_screen.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/update_alert.dart';
@@ -160,13 +161,18 @@ class _EditProfileState extends State<EditProfile> {
                 });
               }
               if (saved) {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ProfileScreen(
-                        image: imgPath!,
-                        name: nameBU!,
-                        gender: widget.gender,
-                        email: emailBU!,
-                        pass: passBU!)));
+                FirebaseAuth.instance.currentUser != null &&
+                        FirebaseAuth.instance.currentUser!.email ==
+                            'admin-athar@gmail.com'
+                    ? Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => AdminNavigator()))
+                    : Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ProfileScreen(
+                            image: imgPath!,
+                            name: nameBU!,
+                            gender: widget.gender,
+                            email: emailBU!,
+                            pass: passBU!)));
               } else {
                 showDialog(
                     context: context,
