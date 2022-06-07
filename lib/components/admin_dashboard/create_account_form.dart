@@ -4,19 +4,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:monumento/components/authentication/sign_in.dart';
+import 'package:monumento/components/admin_dashboard/manage_accounts.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/success_alert.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class SignUpFormBuild extends StatefulWidget {
-  const SignUpFormBuild({Key? key}) : super(key: key);
+class CreateAccountForm extends StatefulWidget {
+
+  final String userEmail;
+  final String userpassword;
+  const CreateAccountForm({Key? key, required this.userEmail, required this.userpassword}) : super(key: key);
 
   @override
-  State<SignUpFormBuild> createState() => _SignUpFormBuildState();
+  State<CreateAccountForm> createState() => _CreateAccountFormState();
 }
 
-class _SignUpFormBuildState extends State<SignUpFormBuild> {
+class _CreateAccountFormState extends State<CreateAccountForm> {
   FormGroup buildForm() => fb.group(<String, Object>{
         'name': FormControl<String>(validators: [
           Validators.required,
@@ -157,11 +160,11 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
                       'The email value must be a valid email',
                   'unique': 'This email is already in use',
                 },
-                autofillHints: [AutofillHints.email],
                 style: GoogleFonts.inter(
                   fontSize: 18.0,
                   color: const Color(0xFF151624),
                 ),
+                autofillHints: [AutofillHints.email],
                 maxLines: 1,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
@@ -319,7 +322,7 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
                           });
                         }
                       },
-                      label: Text('Sign Up',
+                      label: Text('Create Account',
                           style: GoogleFonts.inter(
                             fontSize: 18.0,
                             color: Colors.white,
@@ -400,9 +403,12 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
       });
 
       await auth.signOut();
+      AuthCredential credentials =
+       EmailAuthProvider.credential(email: widget.userEmail, password: widget.userpassword);
+       await auth.signInWithCredential(credentials);
 
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => SignIn()));
+          context, MaterialPageRoute(builder: (_) => ManageAccounts()));
 
       showDialog(
           context: context,
@@ -410,7 +416,7 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
             return SuccessAlert(
               header: 'assets/animations/done.json',
               title: 'Account created successfully',
-              desc: 'You can login now',
+              desc: 'You can move on now',
             );
           });
 
@@ -422,7 +428,7 @@ class _SignUpFormBuildState extends State<SignUpFormBuild> {
         content: RichText(
             text: TextSpan(children: [
           const TextSpan(
-              text: 'Signup Failed\n\n',
+              text: 'Creation Failed\n\n',
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

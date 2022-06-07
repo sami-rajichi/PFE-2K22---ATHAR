@@ -6,6 +6,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:monumento/components/admin_dashboard/admin_navigator.dart';
 import 'package:monumento/components/authentication/sign_in_form.dart';
 import 'package:monumento/components/authentication/sign_up.dart';
 import 'package:monumento/constants/colors.dart';
@@ -67,7 +68,7 @@ class _SignInState extends State<SignIn> {
 
                     //card and footer ui
                     Positioned(
-                      bottom: 20.0,
+                      bottom: 55.0,
                       child: Column(
                         children: <Widget>[
                           buildCard(size),
@@ -297,8 +298,13 @@ class _SignInState extends State<SignIn> {
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         } else {
+          if (user.email!.trim() == 'admin-athar@gmail.com'){
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => NavigationDrawer()));
+            context, MaterialPageRoute(
+              builder: (_) => AdminNavigator()));
+        }
+        else{Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => NavigationDrawer()));}
 
           showDialog(
               context: context,
@@ -382,8 +388,12 @@ class _SignInState extends State<SignIn> {
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } else {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => NavigationDrawer()));
+        if (user.email!.trim() == 'admin-athar@gmail.com'){
+          Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => AdminNavigator()));
+        }
+        else{Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => NavigationDrawer()));}
 
         showDialog(
             context: context,

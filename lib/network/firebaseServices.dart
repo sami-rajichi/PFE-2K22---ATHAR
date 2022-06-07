@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:monumento/models/monuments.dart';
 import 'package:monumento/models/reviews.dart';
+import 'package:monumento/models/users.dart';
 
 class FirebaseServices {
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
@@ -9,9 +11,10 @@ class FirebaseServices {
   CollectionReference reviewsFirestore = FirebaseFirestore.instance.collection('users_reviews');
   CollectionReference userFirestore = FirebaseFirestore.instance.collection('users');
 
-  Stream<DocumentSnapshot> getUser(String? id) {
-    Stream<DocumentSnapshot> doc = userFirestore.doc(id).snapshots();
-    return doc;
+  Stream<List<Users>> getUser() {
+    return userFirestore.snapshots().map((snapshot) => 
+                 snapshot.docs.map((doc) => 
+                 Users.fromJson(doc.data() as Map<String, dynamic>)).toList());
   }
 
   Stream<List<Monument>> getMonuments(String region) {

@@ -5,14 +5,21 @@ class Users {
   final String? gender;
   final String? image;
   final String? uid;
+  final String? providerId;
+  final String? accessToken;
+  final String? idToken;
 
-  Users({
+  Users(
+    {
     this.email,
     this.password, 
     this.gender, 
-    this.uid,
     this.name, 
     this.image, 
+    this.uid,
+    this.providerId, 
+    this.accessToken, 
+    this.idToken, 
     });
 
     static Users fromJson(
@@ -21,7 +28,10 @@ class Users {
       email: json['email'],
       password: json['password'],
       gender: json['gender'],
-      uid: json['uid'],
       image: json['image'],
+      uid: json['uid'],
+      providerId: json['providerId'],
+      accessToken: json['accessToken'],
+      idToken: json['idToken']
     );
 }

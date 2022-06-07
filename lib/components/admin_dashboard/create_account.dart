@@ -1,25 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:monumento/components/authentication/sign_in.dart';
-import 'package:monumento/components/authentication/sign_up_form.dart';
+import 'package:monumento/components/admin_dashboard/admin_navigator.dart';
+import 'package:monumento/components/admin_dashboard/create_account_form.dart';
+import 'package:monumento/components/admin_dashboard/manage_accounts.dart';
 import 'package:monumento/constants/colors.dart';
-import 'package:monumento/shared/components/navigation_drawer.dart';
-import 'package:monumento/shared/components/success_alert.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
+class CreateAccount extends StatefulWidget {
+
+  final String userEmail;
+  final String userpassword;
+  CreateAccount({Key? key, required this.userEmail, required this.userpassword,}) : super(key: key);
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<CreateAccount> createState() => _CreateAccountState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _CreateAccountState extends State<CreateAccount> {
   bool loading = false;
   @override
   Widget build(BuildContext context) {
@@ -66,12 +67,14 @@ class _SignUpState extends State<SignUp> {
 
                     //card and footer ui
                     Positioned(
-                      bottom: 50.0,
-                      child: Column(
-                        children: <Widget>[
-                          buildCard(size),
-                          buildFooter(size),
-                        ],
+                      bottom: 40.0,
+                      child: Center(
+                        child: Column(
+                          children: <Widget>[
+                            buildCard(size),
+                            buildFooter(size)
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -100,7 +103,7 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(
                   height: size.height * 0.05,
                 ),
-                SignUpFormBuild()
+                CreateAccountForm(userEmail: widget.userEmail, userpassword: widget.userpassword,)
               ],
             ),
     );
@@ -165,7 +168,7 @@ class _SignUpState extends State<SignUp> {
               InkWell(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => NavigationDrawer()));
+                      builder: (context) => AdminNavigator()));
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -187,32 +190,6 @@ class _SignUpState extends State<SignUp> {
         SizedBox(
           height: size.height * 0.02,
         ),
-        Text.rich(
-          TextSpan(
-            style: GoogleFonts.inter(
-              fontSize: 12.0,
-              color: Colors.white,
-            ),
-            children: [
-              const TextSpan(
-                text: 'Do you have an account? ',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              TextSpan(
-                  text: 'Sign In here',
-                  style: const TextStyle(
-                    color: Color(0xFFFE9879),
-                    fontWeight: FontWeight.w500,
-                  ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => SignIn()))),
-            ],
-          ),
-          textAlign: TextAlign.center,
-        ),
       ],
     );
   }
@@ -228,13 +205,13 @@ class _SignUpState extends State<SignUp> {
         ),
         children: const [
           TextSpan(
-            text: 'SIGNUP',
+            text: 'CREATE',
             style: TextStyle(
               fontWeight: FontWeight.w800,
             ),
           ),
           TextSpan(
-            text: 'PAGE',
+            text: 'ACCOUNT',
             style: TextStyle(
               color: Color(0xFFFE9879),
               fontWeight: FontWeight.w800,
@@ -287,26 +264,24 @@ class _SignUpState extends State<SignUp> {
             });
 
             await GoogleSignIn().disconnect();
-            await _auth.signOut();
-
+            await FirebaseAuth.instance.signOut();
+            AuthCredential credentials =
+            EmailAuthProvider.credential(email: widget.userEmail, password: widget.userpassword);
+            await _auth.signInWithCredential(credentials);
+            
             Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => SignIn()));
+                context, MaterialPageRoute(builder: (_) => ManageAccounts()));
 
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return SuccessAlert(
-                    header: 'SignUp Succeed',
-                    desc: 'You can login now',
-                  );
-                });
           }
         } else {
           await GoogleSignIn().disconnect();
-          await _auth.signOut();
-
+          await FirebaseAuth.instance.signOut();
+          AuthCredential credentials =
+            EmailAuthProvider.credential(email: widget.userEmail, password: widget.userpassword);
+            await _auth.signInWithCredential(credentials);
+            
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => SignIn()));
+              context, MaterialPageRoute(builder: (_) => ManageAccounts()));
 
           final snackBar = SnackBar(
             content: RichText(
@@ -332,7 +307,6 @@ class _SignUpState extends State<SignUp> {
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-          GoogleSignIn().disconnect();
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -340,7 +314,7 @@ class _SignUpState extends State<SignUp> {
         content: RichText(
             text: TextSpan(children: [
           const TextSpan(
-              text: 'Login Failed\n\n',
+              text: 'Creation Failed\n\n',
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -400,25 +374,24 @@ class _SignUpState extends State<SignUp> {
         });
 
         await FacebookAuth.instance.logOut();
-        await _auth.signOut();
+        await FirebaseAuth.instance.signOut();
+
+        AuthCredential credentials =
+        EmailAuthProvider.credential(email: widget.userEmail, password: widget.userpassword);
+        await _auth.signInWithCredential(credentials);
 
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => SignIn()));
+            context, MaterialPageRoute(builder: (_) => ManageAccounts()));
 
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return SuccessAlert(
-                header: 'SignUp Succeed',
-                desc: 'You can login now',
-              );
-            });
       } else {
         await FacebookAuth.instance.logOut();
-        await _auth.signOut();
-
+        await FirebaseAuth.instance.signOut();
+        AuthCredential credentials =
+        EmailAuthProvider.credential(email: widget.userEmail, password: widget.userpassword);
+        await _auth.signInWithCredential(credentials);
+        
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => SignIn()));
+            context, MaterialPageRoute(builder: (_) => ManageAccounts()));
 
         final snackBar = SnackBar(
           content: RichText(
@@ -444,14 +417,14 @@ class _SignUpState extends State<SignUp> {
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-        GoogleSignIn().disconnect();
+        
       }
     } on FirebaseAuthException catch (e) {
       final snackBar = SnackBar(
         content: RichText(
             text: TextSpan(children: [
           const TextSpan(
-              text: 'Login Failed\n\n',
+              text: 'Creation Failed\n\n',
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

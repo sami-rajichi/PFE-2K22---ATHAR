@@ -234,7 +234,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         content: RichText(
             text: TextSpan(children: [
           const TextSpan(
-              text: 'Update Failed\n\n',
+              text: 'Deletion Failed\n\n',
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

@@ -74,6 +74,7 @@ class _FormBuildState extends State<FormBuild> {
                   fontSize: 18.0,
                   color: const Color(0xFF151624),
                 ),
+                autofillHints: [AutofillHints.email],
                 maxLines: 1,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,

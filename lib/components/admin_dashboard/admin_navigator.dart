@@ -53,7 +53,9 @@ class _AdminNavigatorState extends State<AdminNavigator> {
   dynamic getScreen() {
     switch (currentItem) {
       case AdminPanelMenu.dashboard:
-        return AdminHomepage(uid: FirebaseAuth.instance.currentUser!.uid);
+        return AdminHomepage(
+          uid: FirebaseAuth.instance.currentUser!.uid,
+          );
       case AdminPanelMenu.ar:
         return ArUs();
       case AdminPanelMenu.category:

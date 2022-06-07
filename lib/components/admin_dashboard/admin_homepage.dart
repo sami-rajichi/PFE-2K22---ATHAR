@@ -7,6 +7,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:monumento/components/admin_dashboard/admin_ruins_navigator.dart';
+import 'package:monumento/components/admin_dashboard/manage_accounts.dart';
 import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/components/profile/edit_profile.dart';
 import 'package:monumento/constants/colors.dart';
@@ -106,7 +107,15 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                   },
                                   child: _card(d['image'], 'Profile')),
                               _card('assets/img/ruins.png', 'Monuments'),
-                              _card('assets/img/accounts.png', 'Accounts'),
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ManageAccounts()));
+                                  },
+                                  child: _card(
+                                      'assets/img/accounts.png', 'Accounts')),
                               _card('assets/img/requests.png', 'Requests'),
                               GestureDetector(
                                   onTap: () async {
