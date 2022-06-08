@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:monumento/components/admin_dashboard/admin_ruins_navigator.dart';
 import 'package:monumento/components/admin_dashboard/manage_accounts.dart';
+import 'package:monumento/components/admin_dashboard/requests/consult_rquest.dart';
+import 'package:monumento/components/admin_dashboard/requests/requests_homepage.dart';
 import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/components/profile/edit_profile.dart';
 import 'package:monumento/constants/colors.dart';
@@ -49,23 +53,17 @@ class _AdminHomepageState extends State<AdminHomepage> {
                   backgroundColor: Colors.transparent,
                   centerTitle: true,
                   actions: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 6.0),
-                      child: Icon(
-                        Icons.notifications_none,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    )
-                    // GetAvatar(
-                    //   img: d['image'],
-                    //   name: d['name'],
-                    //   gender: d['gender'],
-                    //   email: d['email'],
-                    //   pass: d['password'],
-                    //   loggedIn: true,
+                    showNotifications()
+                    // Padding(
+                    //   padding: const EdgeInsets.only(right: 6.0),
+                    //   child: Icon(
+                    //     Icons.notifications_none,
+                    //     color: Colors.white,
+                    //     size: 30,
+                    //   ),
                     // )
-                  ]),
+                  ]
+              ),
               body: Stack(
                 children: [
                   SizedBox(
@@ -116,7 +114,15 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                   },
                                   child: _card(
                                       'assets/img/accounts.png', 'Accounts')),
-                              _card('assets/img/requests.png', 'Requests'),
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RequestsHome()));
+                                  },
+                                  child: _card(
+                                      'assets/img/requests.png', 'Requests')),
                               GestureDetector(
                                   onTap: () async {
                                     final isLoggedInWithGoogle =
@@ -242,5 +248,76 @@ class _AdminHomepageState extends State<AdminHomepage> {
         },
       ),
     );
+  }
+
+  Widget showNotifications() {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('requests')
+            .doc('requests')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var d = snapshot.data as DocumentSnapshot;
+            List requests = [];
+            for (Map<String, dynamic> e in d['requests']) {
+              if (e['verified'] == 'no') {
+                requests.add(e);
+              }
+            }
+            return FocusedMenuHolder(
+              menuWidth: 220,
+              menuItems: _request(requests),
+              blurBackgroundColor: AppColors.mainColor.withOpacity(0.4),
+              openWithTap: true,
+              onPressed: () {},
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6.0),
+                    child: Icon(
+                      Icons.notifications_none,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  ),
+                  Positioned(
+                      top: 10,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.red,
+                        radius: 9,
+                        child: Text(
+                          '${requests.length}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ))
+                ],
+              ),
+            );
+          } else {
+            return const CircularProgressIndicator();
+          }
+        });
+  }
+
+  List<FocusedMenuItem> _request(List req) {
+    List<FocusedMenuItem> items = [];
+    for (var i = 0; i < req.length; i++) {
+      items.add(FocusedMenuItem(
+        title: Text(req[i]['issue_type']),
+        trailingIcon: Icon(Icons.report_gmailerrorred_rounded),
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ConsultRequest(
+                    email: req[i]['email'],
+                    issue: req[i]['issue'],
+                    issueType: req[i]['issue_type'],
+                    verified: req[i]['verified'],
+                    image: req[i]['issue_image'],
+                  )));
+        },
+      ));
+    }
+    return items;
   }
 }

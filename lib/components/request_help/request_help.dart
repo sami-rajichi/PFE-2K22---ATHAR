@@ -398,18 +398,44 @@ class _RequestHelpState extends State<RequestHelp> {
       String issueType,
       TextEditingController email,
       BuildContext context) async {
+    String img;
+    switch (issueType) {
+      case 'Informational Support':
+        img = 'assets/img/information.png';
+        break;
+      case 'Technical Support':
+        img = 'assets/img/technical.png';
+        break;
+        case 'Mentoring Support':
+        img = 'assets/img/mentor.png';
+        break;
+      default: img = 'assets/img/other.png';
+    }
+
+    var data = [
+      {
+        'issue_type': issueType,
+        'issue': issue.text,
+        'email': email.text,
+        'verified': 'no',
+        'issue_image': img
+      }
+    ];
     try {
       setState(() {
         loading = true;
       });
 
-      await FirebaseFirestore.instance.collection('requests_help').doc().set({
-        'issue_type': issueType,
-        'issue': issue.text,
-        'email': email.text,
-      });
+      await FirebaseFirestore.instance
+      .collection('requests')
+      .doc('requests')
+      .update({'requests': FieldValue.arrayUnion(data)});
 
       await sendEmail(loggedIn, email);
+
+      await FirebaseFirestore.instance
+      .collection('new_requests')
+      .doc('new_requests').update({'nb_req': FieldValue.increment(1)});
 
       setState(() {
         loading = false;

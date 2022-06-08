@@ -50,4 +50,16 @@ class MapUtils {
       )) throw 'Could not launch $readMoreUrl';
     
   }
+
+  static Future<void> launchEmail(
+    String toEmail, String subject) async {
+    final url = 
+    Uri.parse("mailto:$toEmail?subject=${Uri.encodeFull(subject)}");
+
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication
+      )) throw 'Could not launch $url';
+    
+  }
 }
