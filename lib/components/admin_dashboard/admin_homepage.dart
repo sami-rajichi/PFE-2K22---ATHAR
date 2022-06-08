@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:monumento/components/admin_dashboard/admin_ruins_navigator.dart';
 import 'package:monumento/components/admin_dashboard/manage_accounts.dart';
+import 'package:monumento/components/admin_dashboard/monuments/monuments_homepage.dart';
 import 'package:monumento/components/admin_dashboard/requests/consult_rquest.dart';
 import 'package:monumento/components/admin_dashboard/requests/requests_homepage.dart';
 import 'package:monumento/components/ar/arUs.dart';
@@ -104,7 +105,13 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                                 pass: d['password'])));
                                   },
                                   child: _card(d['image'], 'Profile')),
-                              _card('assets/img/ruins.png', 'Monuments'),
+                              GestureDetector(
+                                onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => MonumentsHomepage()));
+                                  },
+                                child: _card('assets/img/ruins.png', 'Monuments')),
                               GestureDetector(
                                   onTap: () {
                                     Navigator.of(context).push(
@@ -123,6 +130,7 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                   },
                                   child: _card(
                                       'assets/img/requests.png', 'Requests')),
+                              _card('assets/img/cubes.png', '3D Models'),
                               GestureDetector(
                                   onTap: () async {
                                     final isLoggedInWithGoogle =
