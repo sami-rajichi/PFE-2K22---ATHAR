@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:monumento/components/ar/ar_models.dart';
 import 'package:monumento/components/maps/maps_utils.dart';
 import 'package:monumento/components/profile/favorites.dart';
 import 'package:monumento/constants/colors.dart';
+import 'package:monumento/d_b_icons_icons.dart';
 import 'package:monumento/shared/components/concaveCard.dart';
 import 'package:monumento/shared/components/description.dart';
 import 'package:monumento/shared/components/neumorphic_image.dart';
@@ -19,12 +21,6 @@ import 'package:collection/collection.dart';
 class CategoryPage extends StatefulWidget {
   final String? name;
   final String? info;
-  final String? subtitle1;
-  final String? subtitle2;
-  final String? subtitle3;
-  final String? subtitle1Value;
-  final String? subtitle2Value;
-  final String? subtitle3Value;
   final String? location;
   final String? image;
   final String? region;
@@ -41,15 +37,9 @@ class CategoryPage extends StatefulWidget {
     this.image,
     this.region,
     this.country,
-    this.subtitle1,
-    this.subtitle2,
-    this.subtitle3,
     this.color = Colors.white,
     this.backgroundColor = Colors.white,
     this.url,
-    this.subtitle1Value,
-    this.subtitle2Value,
-    this.subtitle3Value,
     this.info,
     this.fromListView,
   }) : super(key: key);
@@ -138,27 +128,11 @@ class _CategoryPageState extends State<CategoryPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        description(
-                            subtitle: widget.subtitle1! + ': ',
-                            text: widget.subtitle1Value!),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        description(
-                            subtitle: widget.subtitle2! + ': ',
-                            text: widget.subtitle2Value!),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        description(
-                            subtitle: widget.subtitle3! + ': ',
-                            text: widget.subtitle3Value!),
-                        SizedBox(
-                          height: 5,
-                        ),
+                        
                         Container(
                           width: 600,
                           child: description(
+                            subtitle: 'Description:\n',
                             text: widget.info!,
                           ),
                         ),
@@ -255,27 +229,10 @@ class _CategoryPageState extends State<CategoryPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                description(
-                                    subtitle: widget.subtitle1! + ': ',
-                                    text: widget.subtitle1Value!),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                description(
-                                    subtitle: widget.subtitle2! + ': ',
-                                    text: widget.subtitle2Value!),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                description(
-                                    subtitle: widget.subtitle3! + ': ',
-                                    text: widget.subtitle3Value!),
-                                SizedBox(
-                                  height: 5,
-                                ),
                                 Container(
                                   width: 600,
                                   child: description(
+                                    subtitle: 'Description:\n',
                                     text: widget.info!,
                                   ),
                                 ),
@@ -305,67 +262,115 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   Widget getButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Column(
       children: [
-        Expanded(
-          child: OutlinedButton.icon(
-              icon: Icon(
-                Icons.read_more_rounded,
-                color: AppColors.mainColor,
-                size: 16,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                  icon: Icon(
+                    Icons.article,
+                    color: AppColors.mainColor,
+                    size: 16,
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: AppColors.mainColor),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    primary: Colors.grey[600],
+                  ),
+                  onPressed: () {
+                    MapUtils.openReadMore(widget.url!);
+                  },
+                  label: Text(
+                    'READ MORE',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 12,
+                        letterSpacing: 2.2,
+                        color: AppColors.mainColor),
+                  )),
+            ),
+            SizedBox(
+              width: 14,
+            ),
+            Expanded(
+              child: OutlinedButton.icon(
+                icon: Icon(
+                  Icons.location_on,
+                  color: AppColors.mainColor,
+                  size: 16,
+                ),
+                style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: AppColors.mainColor),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    primary: Colors.grey[600],
+                  ),
+                onPressed: () {
+                  MapUtils.openMap(widget.name!);
+                },
+                label: Text(
+                  "SHOW IN MAP",
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 12, letterSpacing: 2.2, color: AppColors.mainColor),
+                ),
               ),
-              style: OutlinedButton.styleFrom(
+            )
+          ],
+        ),
+        ElevatedButton.icon(
+            icon: Icon(
+              Icons.threed_rotation,
+              color: Colors.white,
+              size: 16,
+            ),
+            style: ElevatedButton.styleFrom(
                 side: BorderSide(color: AppColors.mainColor),
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(3),
                 ),
-                primary: Colors.grey[600],
+                primary: AppColors.mainColor,
               ),
-              onPressed: () {
-                MapUtils.openReadMore(widget.url!);
-              },
-              label: Text(
-                'READ MORE',
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontSize: 12,
-                    letterSpacing: 2.2,
-                    color: AppColors.mainColor),
-              )),
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        Expanded(
-          child: ElevatedButton.icon(
-            icon: Icon(
-              Icons.map,
-              color: Colors.white,
-              size: 12,
-            ),
-            style: OutlinedButton.styleFrom(
-              primary: Colors.grey[600],
-              backgroundColor: AppColors.mainColor,
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(3)),
-            ),
-            onPressed: () {
-              MapUtils.openMap(widget.name!);
+            onPressed: () async {
+              final model = await getModel();
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) =>
+                  ARModels(monumentName: widget.name, models: model))
+              );
             },
             label: Text(
-              "SHOW IN MAP",
+              "3D VIEW MODE",
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   fontSize: 12, letterSpacing: 2.2, color: Colors.white),
             ),
-          ),
-        )
+          )
       ],
     );
+  }
+
+  Future<String> getModel() async {
+    final doc = await FirebaseFirestore.instance
+                      .collection('ar_models')
+                      .doc('ar_models').get();
+    final data = doc.data();
+    List models = doc['ar_models'];
+    String model = '';
+    for (var i = 0; i < models.length; i++){
+      if (models[i]['name'] == widget.name){
+        model = models[i]['models'];
+        break;
+      }
+    }
+    return model;
   }
 
   Icon addToFavorite(DocumentSnapshot doc) {

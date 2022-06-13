@@ -4,51 +4,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:lottie/lottie.dart';
+import 'package:monumento/components/admin_dashboard/admin_navigator.dart';
+import 'package:monumento/components/admin_dashboard/monuments/add_monument.dart';
+import 'package:monumento/components/admin_dashboard/models/admin_ar_models.dart';
 import 'package:monumento/components/admin_dashboard/requests/consult_rquest.dart';
 import 'package:monumento/components/admin_dashboard/requests/requests_homepage.dart';
+import 'package:monumento/components/ar/ar_models.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/network/firebaseServices.dart';
 import 'package:monumento/shared/components/neumorphic_image.dart';
 
-class ManageRequests extends StatefulWidget {
+class ManageModels extends StatefulWidget {
 
-  final String? verified;
-  const ManageRequests({Key? key, required this.verified}) : super(key: key);
+  const ManageModels({Key? key,}) : super(key: key);
 
   @override
-  State<ManageRequests> createState() => _ManageRequestsState();
+  State<ManageModels> createState() => _ManageModelsState();
 }
 
-class _ManageRequestsState extends State<ManageRequests> {
+class _ManageModelsState extends State<ManageModels> {
   FirebaseServices firebaseServices = new FirebaseServices();
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('requests')
-            .doc('requests')
+            .collection('ar_models')
+            .doc('ar_models')
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var d = snapshot.data as DocumentSnapshot;
-            List requests = [];
-            for (Map<String, dynamic> e in d['requests']) {
-              if (e['verified'] == widget.verified){
-                requests.add(e);
-              }
-            }
+            List models = d['ar_models'];
             return Scaffold(
               appBar: AppBar(
                 elevation: 0,
                 backgroundColor: Colors.transparent,
-                title: widget.verified == 'no'
-                ? Text(
-                  'In Progress Issues',
-                  style: TextStyle(color: AppColors.bigTextColor),
-                )
-                : Text(
-                  'Solved Issues',
+                title: Text(
+                  'Manage 3D Models',
                   style: TextStyle(color: AppColors.bigTextColor),
                 ),
                 centerTitle: true,
@@ -56,7 +49,7 @@ class _ManageRequestsState extends State<ManageRequests> {
                   color: AppColors.bigTextColor,
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => RequestsHome()));
+                        builder: (context) => AdminNavigator()));
                   },
                 ),
               ),
@@ -70,7 +63,7 @@ class _ManageRequestsState extends State<ManageRequests> {
                           neumorphicImage(
                               color: Colors.white,
                               image: Image(
-                                image: AssetImage('assets/img/requests.png'),
+                                image: AssetImage('assets/img/cubes.png'),
                                 fit: BoxFit.fitHeight,
                                 height: 150,
                               )),
@@ -80,7 +73,7 @@ class _ManageRequestsState extends State<ManageRequests> {
                     SizedBox(
                       height: 45,
                     ),
-                    _request(requests)
+                    _request(models)
                   ],
                 ),
               ),
@@ -92,16 +85,16 @@ class _ManageRequestsState extends State<ManageRequests> {
         });
   }
 
-  Widget _request(List req) {
+  Widget _request(List models) {
     return Container(
       height: MediaQuery.of(context).size.height - 340,
       child: ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           physics: BouncingScrollPhysics(),
-          itemCount: req.length,
+          itemCount: models.length,
           itemBuilder: (context, index) {
-            final item = req[index];
+            final item = models[index];
             return Padding(
               padding: const EdgeInsets.only(bottom: 18.0),
               child: Dismissible(
@@ -120,18 +113,36 @@ class _ManageRequestsState extends State<ManageRequests> {
                     ),
                   ),
                 ),
-                direction: DismissDirection.startToEnd,
+                secondaryBackground: const Card(
+                  color: Colors.green,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 15.0),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Icon(
+                        Icons.edit_note,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                    ),
+                  ),
+                ),
                 onDismissed: (DismissDirection direction) {
                   switch (direction) {
                     case DismissDirection.startToEnd:
                       showDialog(
                           context: context,
                           builder: (context) => saveAlert(
-                                req[index]['issue_type'],
-                                req[index]['issue_image'],
-                                req[index]['issue'],
-                                req[index]['email'],
+                                models[index]['name'],
+                                models[index]['image'],
+                                models[index]['models'],
                               ));
+                      break;
+                    case DismissDirection.endToStart:
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => AdminARModels(
+                          monumentName: models[index]['name'], 
+                          models: models[index]['models'])));
                       break;
                     default:
                       print('Invalid Option !!');
@@ -140,12 +151,9 @@ class _ManageRequestsState extends State<ManageRequests> {
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ConsultRequest(
-                            email: req[index]['email'],
-                            issue: req[index]['issue'],
-                            issueType: req[index]['issue_type'],
-                            verified: widget.verified,
-                            image: req[index]['issue_image'],)));
+                        builder: (context) => AdminARModels(
+                          monumentName: models[index]['name'], 
+                          models: models[index]['models'])));
                   },
                   child: Material(
                     elevation: 8,
@@ -156,20 +164,11 @@ class _ManageRequestsState extends State<ManageRequests> {
                       key: ObjectKey(item),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30)),
-                      leading: Image.asset(
-                        req[index]['issue_image'],
-                        height: 40,
-                        width: 40,
-                        fit: BoxFit.cover,
+                      leading: CircleAvatar(
+                        radius: 30,
+                        backgroundImage: AssetImage(models[index]['image'])
                       ),
-                      title: Text(req[index]['email']),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.only(top: 6.0),
-                        child: Text(
-                          req[index]['issue_type'],
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
+                      title: Text(models[index]['name']),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                       tileColor: Colors.white,
@@ -184,10 +183,9 @@ class _ManageRequestsState extends State<ManageRequests> {
                                   showDialog(
                                       context: context,
                                       builder: (context) => saveAlert(
-                                            req[index]['issue_type'],
-                                            req[index]['issue_image'],
-                                            req[index]['issue'],
-                                            req[index]['email'],
+                                            models[index]['name'],
+                                            models[index]['image'],
+                                            models[index]['models'],
                                           ));
                                 },
                                 icon: Icon(
@@ -197,14 +195,11 @@ class _ManageRequestsState extends State<ManageRequests> {
                               ),
                               IconButton(
                                 onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ConsultRequest(
-                                          email: req[index]['email'],
-                                          issue: req[index]['issue'],
-                                          issueType: req[index]['issue_type'],
-                                          verified: widget.verified,
-                                          image: req[index]['issue_image'],)));
-                                },
+                                  openDilog(
+                                    models[index]['image'], 
+                                    models[index]['name'], 
+                                    models[index]['models']);
+                                  },
                                 icon: Icon(
                                   Icons.edit_note,
                                   color: Colors.green,
@@ -224,34 +219,32 @@ class _ManageRequestsState extends State<ManageRequests> {
     );
   }
 
-  Future delete(BuildContext context, String issueType, String img,
-      String issue, String email) async {
+  Future delete(BuildContext context, String name, String img,
+      String model) async {
     try {
       var data = [
         {
-          'issue_type': issueType,
-          'issue': issue,
-          'email': email,
-          'verified': 'no',
-          'issue_image': img
+          'name': name,
+          'models': model,
+          'image': img
         }
       ];
       await FirebaseFirestore.instance
-          .collection('requests')
-          .doc('requests')
-          .update({'requests': FieldValue.arrayRemove(data)});
+          .collection('ar_models')
+          .doc('ar_models')
+          .update({'ar_models': FieldValue.arrayRemove(data)});
 
       final snackBar = SnackBar(
         content: RichText(
             text: TextSpan(children: [
           const TextSpan(
-              text: 'An issue has been deleted successfully\n\n',
+              text: 'A model has been deleted successfully\n\n',
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white)),
           TextSpan(
-              text: 'An issue from $email has been deleted',
+              text: 'A model of $name has been deleted',
               style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
@@ -292,7 +285,7 @@ class _ManageRequestsState extends State<ManageRequests> {
     }
   }
 
-  Widget saveAlert(String issueType, String img, String issue, String email) {
+  Widget saveAlert(String img, String name, String model) {
     return Dialog(
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -307,7 +300,7 @@ class _ManageRequestsState extends State<ManageRequests> {
                 child: Column(
                   children: [
                     Text(
-                      'Delete Account',
+                      'Delete Model',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -318,7 +311,7 @@ class _ManageRequestsState extends State<ManageRequests> {
                       height: 20,
                     ),
                     Text(
-                      'Would you really want to delete this issue?',
+                      'Would you really want to delete this model?',
                       style: TextStyle(fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
@@ -340,7 +333,7 @@ class _ManageRequestsState extends State<ManageRequests> {
                             ),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ManageRequests(verified: widget.verified,)));
+                                  builder: (context) => ManageModels()));
                             },
                             child: Text(
                               'CANCEL',
@@ -360,7 +353,7 @@ class _ManageRequestsState extends State<ManageRequests> {
                                 borderRadius: BorderRadius.circular(20)),
                           ),
                           onPressed: () {
-                            delete(context, issueType, img, issue, email);
+                            delete(context, img, name, model);
                             Navigator.of(context).pop();
                           },
                           child: Text(
@@ -390,5 +383,42 @@ class _ManageRequestsState extends State<ManageRequests> {
                 )),
           ],
         ));
+  }
+  
+  openDilog(String image, String name, String model){
+    return showDialog(
+      context: context, 
+      builder: (context){
+        return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0)
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.topCenter,
+        children: [
+          Container(
+            height: 340,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 65, 10, 10),
+              child: Container()
+            ),
+          ),
+          Positioned(
+            top: -65,
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 40,
+              child: Image.asset(
+                image,
+                fit: BoxFit.cover,
+                ),
+            )
+          ),
+        ],
+      )
+    );
+      }
+    );
   }
 }

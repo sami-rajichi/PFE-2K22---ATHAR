@@ -12,6 +12,7 @@ import 'package:monumento/components/authentication/sign_up.dart';
 import 'package:monumento/components/request_help/request_help_navigator.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/menu_widget.dart';
+import 'package:monumento/shared/components/not_logged_in.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -73,109 +74,11 @@ class _RequestHelpState extends State<RequestHelp> {
   @override
   Widget build(BuildContext context) {
     if (auth.currentUser == null) {
-      return notLoggedIn();
+      return NotLoggedInPage(pageTitle: 'Report Issue');
     } else {
       var uid = auth.currentUser!.uid;
       return loggedIn(uid, auth.currentUser!);
     }
-  }
-
-  Widget notLoggedIn() {
-    final size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        leading: MenuWidget(
-          color: AppColors.bigTextColor,
-        ),
-        title: Text(
-          'Request Help',
-          style: TextStyle(color: AppColors.bigTextColor),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 80.0),
-        child: Column(
-          children: [
-            Lottie.asset('assets/animations/notLoggedIn.json',
-                height: size.height * 0.4, repeat: true),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Oops.. You need to login first in order to send request.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.montserrat(
-                  fontSize: 18, fontWeight: FontWeight.w500),
-            ),
-            Spacer(),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 26.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: Colors.black45),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          primary: Colors.grey[600],
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (context) => SignUp()),
-                              (route) => false);
-                        },
-                        child: Text(
-                          'SIGN UP',
-                          style: TextStyle(
-                              fontSize: 15,
-                              letterSpacing: 2.2,
-                              color: Colors.black87),
-                        )),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: ElevatedButton(
-                      style: OutlinedButton.styleFrom(
-                        primary: Colors.grey[600],
-                        backgroundColor: AppColors.mainColor,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 35, vertical: 12),
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (context) => SignIn()),
-                              (route) => false);
-                      },
-                      child: Text(
-                        "SIGN IN",
-                        style: TextStyle(
-                            fontSize: 15,
-                            letterSpacing: 2.2,
-                            color: Colors.white),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
   }
 
   Widget loggedIn(String uid, User user) {

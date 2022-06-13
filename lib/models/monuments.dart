@@ -2,12 +2,6 @@
 class Monument {
   final String? name;
   final String? info;
-  final String? subtitle1;
-  final String? subtitle2;
-  final String? subtitle3;
-  final String? subtitle1Value;
-  final String? subtitle2Value;
-  final String? subtitle3Value;
   final String? location;
   final String? region;
   final String? image;
@@ -21,10 +15,7 @@ class Monument {
     this.region, 
     this.image, 
     this.country, 
-    this.subtitle1, this.subtitle2, this.subtitle3,
     this.url, 
-    this.subtitle1Value, 
-    this.subtitle2Value, this.subtitle3Value, 
     this.info
     });
 
@@ -34,12 +25,6 @@ class Monument {
       location: json['location'],
       region: json['region'],
       image: json['image'],
-      subtitle1: json['subtitle1'],
-      subtitle2: json['subtitle2'],
-      subtitle3: json['subtitle3'],
-      subtitle1Value: json['subtitle1-value'],
-      subtitle2Value: json['subtitle2-value'],
-      subtitle3Value: json['subtitle3-value'],
       url: json['url']
     );
 }

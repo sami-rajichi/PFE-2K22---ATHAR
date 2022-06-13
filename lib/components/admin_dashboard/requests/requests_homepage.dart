@@ -84,7 +84,7 @@ class _RequestsHomeState extends State<RequestsHome> {
                               Icons.dangerous_outlined,
                               color: AppColors.mainColor,
                             ),
-                            title:  index == 0 ? Text('Verified Requests') : Text('Unverified Requests'),
+                            title:  index == 0 ? Text('Solved Issues') : Text('In Progress Issues'),
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 8),
                             tileColor: Colors.white,

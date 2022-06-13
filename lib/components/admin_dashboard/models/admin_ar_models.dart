@@ -7,21 +7,22 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
+import 'package:monumento/components/admin_dashboard/models/manage_models.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/not_logged_in.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class ARModels extends StatefulWidget {
+class AdminARModels extends StatefulWidget {
   final String? monumentName;
   final String? models;
-  const ARModels({Key? key, required this.monumentName, required this.models})
+  const AdminARModels({Key? key, required this.monumentName, required this.models})
       : super(key: key);
 
   @override
-  State<ARModels> createState() => _ARModelsState();
+  State<AdminARModels> createState() => _AdminARModelsState();
 }
 
-class _ARModelsState extends State<ARModels> {
+class _AdminARModelsState extends State<AdminARModels> {
   int activeIndex = 0;
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -44,7 +45,9 @@ class _ARModelsState extends State<ARModels> {
         leading: BackButton(
           color: AppColors.bigTextColor,
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => ManageModels())
+            );
           },
         ),
       ),

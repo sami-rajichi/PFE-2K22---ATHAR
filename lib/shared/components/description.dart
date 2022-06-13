@@ -7,13 +7,13 @@ Widget description({
   required String text,
 }) =>
     RichText(
-      maxLines: 4,
+      maxLines: 6,
       overflow: TextOverflow.ellipsis,
       text: TextSpan(
           text: '${subtitle}',
           style: TextStyle(
               color: AppColors.bigTextColor, 
-              fontSize: 15, 
+              fontSize: 17, 
               fontWeight: FontWeight.w900),
           children: [
             TextSpan(

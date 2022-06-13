@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:monumento/components/ar/arUs.dart';
+import 'package:monumento/components/ar/ar_models_homepage.dart';
 import 'package:monumento/components/categories/categories_home.dart';
 import 'package:monumento/components/changelog/changelog.dart';
 import 'package:monumento/components/maps/maps_utils.dart';
@@ -51,16 +52,14 @@ class _RequestHelpNavigatorState extends State<RequestHelpNavigator> {
     switch (currentItem) {
       case MenuItems.home:
         return Home();
-      case MenuItems.map:
-        return Home();
+      case MenuItems.arModels:
+        return ARModelsHomepage();
       case MenuItems.ar:
         return ArUs();
       case MenuItems.category:
         return HomeCategories();
       case MenuItems.rateUs:
         return Home();
-      case MenuItems.update:
-        return ChangeLogScreen();
       case MenuItems.requestHelp:
         return RequestHelp();
     }

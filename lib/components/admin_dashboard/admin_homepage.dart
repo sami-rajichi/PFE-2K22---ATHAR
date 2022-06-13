@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:monumento/components/admin_dashboard/admin_ruins_navigator.dart';
 import 'package:monumento/components/admin_dashboard/manage_accounts.dart';
+import 'package:monumento/components/admin_dashboard/models/manage_models.dart';
 import 'package:monumento/components/admin_dashboard/monuments/monuments_homepage.dart';
 import 'package:monumento/components/admin_dashboard/requests/consult_rquest.dart';
 import 'package:monumento/components/admin_dashboard/requests/requests_homepage.dart';
@@ -129,8 +130,7 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                                 RequestsHome()));
                                   },
                                   child: _card(
-                                      'assets/img/requests.png', 'Requests')),
-                              _card('assets/img/cubes.png', '3D Models'),
+                                      'assets/img/requests.png', 'Issues')),
                               GestureDetector(
                                   onTap: () async {
                                     final isLoggedInWithGoogle =
@@ -175,7 +175,6 @@ class _AdminHomepageState extends State<AdminHomepage> {
                   )
                 ],
               ),
-              bottomNavigationBar: bottomBar(),
             );
           } else {
             return const CircularProgressIndicator();
@@ -206,58 +205,6 @@ class _AdminHomepageState extends State<AdminHomepage> {
     );
   }
 
-  Widget bottomBar() {
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: Colors.black38,
-            blurRadius: 3,
-          ),
-        ],
-      ),
-      child: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: AppColors.mainColor,
-        unselectedItemColor: AppColors.mainColor.withOpacity(0.5),
-        iconSize: 25,
-        showUnselectedLabels: false,
-        type: BottomNavigationBarType.fixed,
-        elevation: 16,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.camera_alt_rounded,
-              ),
-              label: 'Camera'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.dashboard,
-              ),
-              label: 'Dashboard'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.account_balance_rounded,
-              ),
-              label: 'Ruins'),
-        ],
-        currentIndex: 1,
-        onTap: (int i) {
-          if (i == 0) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => ArUs()));
-          } else if (i == 2) {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => AdminRuinsNavigator()));
-          } else {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => NavigationDrawer()));
-          }
-        },
-      ),
-    );
-  }
-
   Widget showNotifications() {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -279,7 +226,16 @@ class _AdminHomepageState extends State<AdminHomepage> {
               blurBackgroundColor: AppColors.mainColor.withOpacity(0.4),
               openWithTap: true,
               onPressed: () {},
-              child: Stack(
+              child: requests.length == 0
+              ? Padding(
+                    padding: const EdgeInsets.only(right: 6.0),
+                    child: Icon(
+                      Icons.notifications_none,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  )
+              : Stack(
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(right: 6.0),

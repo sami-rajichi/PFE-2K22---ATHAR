@@ -5,6 +5,7 @@ import 'package:monumento/components/categories/categories_home.dart';
 import 'package:monumento/components/categories/ruins_home_navigator.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/shared/components/navigation_drawer.dart';
+import 'package:monumento/shared/components/not_logged_in.dart';
 
 class ArUs extends StatefulWidget {
   const ArUs({Key? key}) : super(key: key);
@@ -24,9 +25,18 @@ class _ArUsState extends State<ArUs> {
   void dispose() {
     super.dispose();
   }
-
+  FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
+    if (auth.currentUser == null) {
+      return NotLoggedInPage(pageTitle: 'AR Camera');
+    } else {
+      return loggedIn();
+    }
+    
+  }
+
+  Widget loggedIn(){
     return Scaffold(
       bottomNavigationBar: bottomBar(),
     );

@@ -11,6 +11,9 @@ import 'package:lottie/lottie.dart';
 import 'package:monumento/components/admin_dashboard/admin_navigator.dart';
 import 'package:monumento/components/admin_dashboard/consult_account.dart';
 import 'package:monumento/components/admin_dashboard/create_account.dart';
+import 'package:monumento/components/admin_dashboard/monuments/add_monument.dart';
+import 'package:monumento/components/admin_dashboard/monuments/consult_monument.dart';
+import 'package:monumento/components/admin_dashboard/monuments/monument_page.dart';
 import 'package:monumento/components/admin_dashboard/monuments/monuments_homepage.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/models/monuments.dart';
@@ -38,6 +41,7 @@ class _ManageMonumentsState extends State<ManageMonuments> {
           if (snapshot.hasData) {
             final monuments = snapshot.data!;
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 elevation: 0,
                 backgroundColor: Colors.transparent,
@@ -81,12 +85,12 @@ class _ManageMonumentsState extends State<ManageMonuments> {
               ),
               floatingActionButton: FloatingActionButton(
                 child: Icon(
-                  Icons.person_add_alt,
+                  Icons.add,
                   color: Colors.white,
                 ),
                 backgroundColor: AppColors.mainColor,
                 onPressed: () {
-                  
+                  openDilog();
                 },
               ),
               backgroundColor: AppColors.backgroundColor,
@@ -168,13 +172,15 @@ class _ManageMonumentsState extends State<ManageMonuments> {
                 },
                 child: InkWell(
                   onTap: () {
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //     builder: (context) => ConsultAccount(
-                    //         image: accounts[index].image!,
-                    //         name: accounts[index].name!,
-                    //         gender: accounts[index].gender!,
-                    //         email: accounts[index].email!,
-                    //         pass: accounts[index].password!)));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ConsultMonument(
+                          name: monument[index].name,
+                          image: monument[index].image,
+                          location: monument[index].location,
+                          region: monument[index].region,
+                          info: monument[index].info,
+                          url: monument[index].url,
+                        )));
                   },
                   child: Material(
                     elevation: 8,
@@ -261,5 +267,15 @@ class _ManageMonumentsState extends State<ManageMonuments> {
     } else {
       return NetworkImage(image);
     } 
+  }
+
+  openDilog(){
+    return showDialog(
+      barrierDismissible: false,
+      context: context, 
+      builder: (context){
+        return AddMonument();
+      }
+    );
   }
 }
