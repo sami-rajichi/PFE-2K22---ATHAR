@@ -7,7 +7,7 @@ class MenuItems {
   static const ar = MI('Camera', Icons.camera);
   static const category = MI('Archeological Sites', Icons.account_balance_rounded);
   static const arModels = MI('3D Models', Icons.category);
-  static const requestHelp = MI('Request Help', Icons.assistant);
+  static const requestHelp = MI('Report Issue', Icons.assistant);
   static const rateUs = MI('Rate Us', Icons.feedback_sharp);
 
   static const all = <MI>[
