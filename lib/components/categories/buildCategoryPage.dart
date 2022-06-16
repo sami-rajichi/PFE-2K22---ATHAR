@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -87,7 +88,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   child: neumorphicImage(
                       color: Colors.grey[400],
                       image: Image(
-                        image: AssetImage(widget.image!),
+                        image: getImage(widget.image!),
                         fit: BoxFit.fill,
                         height: 250,
                       )),
@@ -187,7 +188,7 @@ class _CategoryPageState extends State<CategoryPage> {
                           child: neumorphicImage(
                               color: Colors.grey[400],
                               image: Image(
-                                image: AssetImage(widget.image!),
+                                image: getImage(widget.image!),
                                 fit: BoxFit.fill,
                                 height: 250,
                               )),
@@ -531,6 +532,18 @@ class _CategoryPageState extends State<CategoryPage> {
         behavior: SnackBarBehavior.floating,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
+  ImageProvider getImage(String img) {
+    if (img == null) {
+      return AssetImage('assets/img/avatar.png');
+    } else if (img.startsWith('assets/')) {
+      return AssetImage(img);
+    } else if (img.startsWith('http')) {
+      return NetworkImage(img);
+    } else {
+      return FileImage(File(img));
     }
   }
 }

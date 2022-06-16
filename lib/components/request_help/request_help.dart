@@ -93,7 +93,7 @@ class _RequestHelpState extends State<RequestHelp> {
           color: AppColors.bigTextColor,
         ),
         title: Text(
-          'Request Help',
+          'Report Issue',
           style: TextStyle(color: AppColors.bigTextColor),
         ),
       ),
@@ -276,7 +276,7 @@ class _RequestHelpState extends State<RequestHelp> {
                                   form.markAllAsTouched();
                                 }
                               },
-                              child: Text('Send Request',
+                              child: Text('SEND ISSUE',
                                   style: TextStyle(
                                     fontSize: 18.0,
                                     color: Colors.white,

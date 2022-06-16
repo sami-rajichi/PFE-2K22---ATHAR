@@ -234,7 +234,7 @@ class _ManageAccountsState extends State<ManageAccounts> {
                                           pass: accounts[index].password!)));
                                 },
                                 icon: Icon(
-                                  Icons.edit_note,
+                                  Icons.remove_red_eye_rounded,
                                   color: Colors.green,
                                 ),
                               ),

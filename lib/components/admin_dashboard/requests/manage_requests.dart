@@ -206,7 +206,7 @@ class _ManageRequestsState extends State<ManageRequests> {
                                           image: req[index]['issue_image'],)));
                                 },
                                 icon: Icon(
-                                  Icons.edit_note,
+                                  Icons.remove_red_eye_rounded,
                                   color: Colors.green,
                                 ),
                               ),

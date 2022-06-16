@@ -31,7 +31,7 @@ class _RequestsHomeState extends State<RequestsHome> {
             color: AppColors.bigTextColor,
           ),
           title: Text(
-            'Requests',
+            'Reported Issues',
             style: TextStyle(color: AppColors.bigTextColor),
           ),
           centerTitle: true,

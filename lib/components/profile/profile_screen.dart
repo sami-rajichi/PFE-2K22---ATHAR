@@ -172,13 +172,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
                 child: ListTile(
                   leading: Icon(
-                    Icons.photo_album,
+                    Icons.delete,
                     color: AppColors.mainColor,
                   ),
                   tileColor: Colors.white,
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  title: Text('Gallery'),
+                  title: Text('Delete Account'),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     color: AppColors.mainColor,
