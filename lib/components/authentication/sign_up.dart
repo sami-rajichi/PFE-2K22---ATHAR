@@ -296,7 +296,7 @@ class _SignUpState extends State<SignUp> {
                 context: context,
                 builder: (BuildContext context) {
                   return SuccessAlert(
-                    header: 'SignUp Succeed',
+                    title: 'SignUp Succeed',
                     desc: 'You can login now',
                   );
                 });
@@ -409,7 +409,7 @@ class _SignUpState extends State<SignUp> {
             context: context,
             builder: (BuildContext context) {
               return SuccessAlert(
-                header: 'SignUp Succeed',
+                title: 'SignUp Succeed',
                 desc: 'You can login now',
               );
             });
