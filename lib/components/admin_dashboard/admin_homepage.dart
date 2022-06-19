@@ -8,11 +8,13 @@ import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lottie/lottie.dart';
 import 'package:monumento/components/admin_dashboard/admin_ruins_navigator.dart';
 import 'package:monumento/components/admin_dashboard/manage_accounts.dart';
 import 'package:monumento/components/admin_dashboard/models/manage_models.dart';
 import 'package:monumento/components/admin_dashboard/monuments/monuments_homepage.dart';
 import 'package:monumento/components/admin_dashboard/requests/consult_rquest.dart';
+import 'package:monumento/components/admin_dashboard/requests/manage_requests.dart';
 import 'package:monumento/components/admin_dashboard/requests/requests_homepage.dart';
 import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/components/profile/edit_profile.dart';
@@ -55,17 +57,11 @@ class _AdminHomepageState extends State<AdminHomepage> {
                   backgroundColor: Colors.transparent,
                   centerTitle: true,
                   actions: [
-                    showNotifications()
-                    // Padding(
-                    //   padding: const EdgeInsets.only(right: 6.0),
-                    //   child: Icon(
-                    //     Icons.notifications_none,
-                    //     color: Colors.white,
-                    //     size: 30,
-                    //   ),
-                    // )
-                  ]
-              ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 9.0),
+                      child: showNotifications(),
+                    )
+                  ]),
               body: Stack(
                 children: [
                   SizedBox(
@@ -107,12 +103,14 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                   },
                                   child: _card(d['image'], 'Profile')),
                               GestureDetector(
-                                onTap: () {
+                                  onTap: () {
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
-                                            builder: (context) => MonumentsHomepage()));
+                                            builder: (context) =>
+                                                MonumentsHomepage()));
                                   },
-                                child: _card('assets/img/ruins.png', 'Monuments')),
+                                  child: _card(
+                                      'assets/img/ruins.png', 'Monuments')),
                               GestureDetector(
                                   onTap: () {
                                     Navigator.of(context).push(
@@ -133,37 +131,9 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                       'assets/img/requests.png', 'Issues')),
                               GestureDetector(
                                   onTap: () async {
-                                    final isLoggedInWithGoogle =
-                                        await GoogleSignIn().isSignedIn();
-                                    final fbLoggedIn =
-                                        FacebookAuth.instance.accessToken;
-                                    if (isLoggedInWithGoogle) {
-                                      GoogleSignIn().disconnect();
-                                      FirebaseAuth.instance.signOut();
-                                      Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) =>
-                                                  NavigationDrawer()),
-                                          (route) => false);
-                                    } else if (fbLoggedIn != null) {
-                                      await FacebookAuth.instance.logOut();
-                                      await FirebaseAuth.instance.signOut();
-                                      Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) =>
-                                                  NavigationDrawer()),
-                                          (route) => false);
-                                    } else {
-                                      await FirebaseAuth.instance.signOut();
-                                      Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) =>
-                                                  NavigationDrawer()),
-                                          (route) => false);
-                                    }
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => saveAlert());
                                   },
                                   child:
                                       _card('assets/img/logout.png', 'Logout')),
@@ -221,42 +191,42 @@ class _AdminHomepageState extends State<AdminHomepage> {
               }
             }
             return FocusedMenuHolder(
-              menuWidth: 220,
+              menuWidth: 200,
               menuItems: _request(requests),
               blurBackgroundColor: AppColors.mainColor.withOpacity(0.4),
               openWithTap: true,
               onPressed: () {},
               child: requests.length == 0
-              ? Padding(
-                    padding: const EdgeInsets.only(right: 6.0),
-                    child: Icon(
-                      Icons.notifications_none,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  )
-              : Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 6.0),
-                    child: Icon(
-                      Icons.notifications_none,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
-                  Positioned(
-                      top: 10,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.red,
-                        radius: 9,
-                        child: Text(
-                          '${requests.length}',
-                          style: TextStyle(color: Colors.white),
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 6.0),
+                      child: Icon(
+                        Icons.notifications_none,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    )
+                  : Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 6.0),
+                          child: Icon(
+                            Icons.notifications_none,
+                            color: Colors.white,
+                            size: 30,
+                          ),
                         ),
-                      ))
-                ],
-              ),
+                        Positioned(
+                            top: 10,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.red,
+                              radius: 9,
+                              child: Text(
+                                '${requests.length}',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ))
+                      ],
+                    ),
             );
           } else {
             return const CircularProgressIndicator();
@@ -266,22 +236,177 @@ class _AdminHomepageState extends State<AdminHomepage> {
 
   List<FocusedMenuItem> _request(List req) {
     List<FocusedMenuItem> items = [];
+    int ts = 0;
+    int infs = 0;
+    int ms = 0;
+    int os = 0;
     for (var i = 0; i < req.length; i++) {
+      switch (req[i]['issue_type']) {
+        case 'Technical Support':
+          ts = ts + 1;
+          break;
+        case 'Informational Support':
+          infs = infs + 1;
+          break;
+        case 'Mentoring Support':
+          ms = ms + 1;
+          break;
+        case 'Other':
+          os = os + 1;
+          break;
+        default:
+          ts = 0;
+          infs = 0;
+          ms = 0;
+          os = 0;
+      }
+    }
+    Map s = {
+      'Technical Support': ts,
+      'Informational Support': infs,
+      'Mentoring Support': ms,
+      'Other Services': os,
+    };
+    for (var i in s.keys) {
       items.add(FocusedMenuItem(
-        title: Text(req[i]['issue_type']),
-        trailingIcon: Icon(Icons.report_gmailerrorred_rounded),
+        title: SizedBox(
+          width: 170,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text(i), Spacer(), Text(s[i].toString())],
+          ),
+        ),
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ConsultRequest(
-                    email: req[i]['email'],
-                    issue: req[i]['issue'],
-                    issueType: req[i]['issue_type'],
-                    verified: req[i]['verified'],
-                    image: req[i]['issue_image'],
-                  )));
+              builder: (context) => ManageRequests(verified: 'no')));
         },
       ));
     }
     return items;
+  }
+
+  Widget saveAlert() {
+    return Dialog(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.topCenter,
+          children: [
+            Container(
+              height: 240,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 65, 10, 10),
+                child: Column(
+                  children: [
+                    Text(
+                      'Logout',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 19,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Would you really want to logout?',
+                      style: TextStyle(fontSize: 18),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: Colors.black45),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              primary: Colors.grey[600],
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'CANCEL',
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  letterSpacing: 2.2,
+                                  color: Colors.black87),
+                            )),
+                        ElevatedButton(
+                          style: OutlinedButton.styleFrom(
+                            primary: Colors.grey[600],
+                            backgroundColor: AppColors.mainColor,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 35, vertical: 12),
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                          ),
+                          onPressed: () async {
+                            final isLoggedInWithGoogle =
+                                await GoogleSignIn().isSignedIn();
+                            final fbLoggedIn =
+                                FacebookAuth.instance.accessToken;
+                            if (isLoggedInWithGoogle) {
+                              GoogleSignIn().disconnect();
+                              FirebaseAuth.instance.signOut();
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => NavigationDrawer()),
+                                  (route) => false);
+                            } else if (fbLoggedIn != null) {
+                              await FacebookAuth.instance.logOut();
+                              await FirebaseAuth.instance.signOut();
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => NavigationDrawer()),
+                                  (route) => false);
+                            } else {
+                              await FirebaseAuth.instance.signOut();
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => NavigationDrawer()),
+                                  (route) => false);
+                            }
+                          },
+                          child: Text(
+                            "LOGOUT",
+                            style: TextStyle(
+                                fontSize: 15,
+                                letterSpacing: 2.2,
+                                color: Colors.white),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+                top: -35,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 40,
+                  child: Lottie.asset(
+                    'assets/animations/warning.json',
+                    fit: BoxFit.cover,
+                    repeat: false,
+                  ),
+                )),
+          ],
+        ));
   }
 }

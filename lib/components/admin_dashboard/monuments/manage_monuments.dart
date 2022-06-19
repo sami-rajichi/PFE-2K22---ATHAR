@@ -15,6 +15,7 @@ import 'package:monumento/components/admin_dashboard/monuments/add_monument.dart
 import 'package:monumento/components/admin_dashboard/monuments/consult_monument.dart';
 import 'package:monumento/components/admin_dashboard/monuments/monument_page.dart';
 import 'package:monumento/components/admin_dashboard/monuments/monuments_homepage.dart';
+import 'package:monumento/components/admin_dashboard/monuments/update_monument.dart';
 import 'package:monumento/constants/colors.dart';
 import 'package:monumento/models/monuments.dart';
 import 'package:monumento/models/users.dart';
@@ -22,7 +23,6 @@ import 'package:monumento/network/firebaseServices.dart';
 import 'package:monumento/shared/components/neumorphic_image.dart';
 
 class ManageMonuments extends StatefulWidget {
-
   final String? region;
   const ManageMonuments({Key? key, required this.region}) : super(key: key);
 
@@ -57,7 +57,6 @@ class _ManageMonumentsState extends State<ManageMonuments> {
                         builder: (context) => MonumentsHomepage()));
                   },
                 ),
-                
               ),
               body: Container(
                 padding: EdgeInsets.only(left: 20, top: 30, right: 20),
@@ -143,44 +142,50 @@ class _ManageMonumentsState extends State<ManageMonuments> {
                     ),
                   ),
                 ),
-                onDismissed: (DismissDirection direction) {
-                  // switch (direction) {
-                  //   case DismissDirection.endToStart:
-                  //     Navigator.of(context).push(MaterialPageRoute(
-                  //         builder: (context) => ConsultAccount(
-                  //             image: accounts[index].image!,
-                  //             name: accounts[index].name!,
-                  //             gender: accounts[index].gender!,
-                  //             email: accounts[index].email!,
-                  //             pass: accounts[index].password!)));
-                  //     break;
-                  //   case DismissDirection.startToEnd:
-                  //     showDialog(
-                  //         context: context,
-                  //         builder: (context) => saveAlert(
-                  //             accounts[index].name!,
-                  //             accounts[index].uid!,
-                  //             accounts[index].email!,
-                  //             accounts[index].password!,
-                  //             accounts[index].providerId!,
-                  //             accounts[index].accessToken!,
-                  //             accounts[index].idToken!));
-                  //     break;
-                  //   default:
-                  //     print('Invalid Option !!');
-                  // }
+                onDismissed: (DismissDirection direction) async {
+                  switch (direction) {
+                    case DismissDirection.endToStart:
+                      String model = await getModel(monument[index].name!);
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            return UpdateMonument(
+                              name: monument[index].name,
+                              image: monument[index].image,
+                              location: monument[index].location,
+                              region: monument[index].region,
+                              info: monument[index].info,
+                              url: monument[index].url,
+                              model: model,
+                            );
+                          });
+                      break;
+                    case DismissDirection.startToEnd:
+                      String model = await getModel(monument[index].name!);
+                      showDialog(
+                          context: context,
+                          builder: (context) => saveAlert(
+                                monument[index].name!,
+                                model,
+                                monument[index].image!,
+                              ));
+                      break;
+                    default:
+                      print('Invalid Option !!');
+                  }
                 },
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ConsultMonument(
-                          name: monument[index].name,
-                          image: monument[index].image,
-                          location: monument[index].location,
-                          region: monument[index].region,
-                          info: monument[index].info,
-                          url: monument[index].url,
-                        )));
+                              name: monument[index].name,
+                              image: monument[index].image,
+                              location: monument[index].location,
+                              region: monument[index].region,
+                              info: monument[index].info,
+                              url: monument[index].url,
+                            )));
                   },
                   child: Material(
                     elevation: 8,
@@ -213,17 +218,16 @@ class _ManageMonumentsState extends State<ManageMonuments> {
                           child: Row(
                             children: [
                               IconButton(
-                                onPressed: () {
-                                  // showDialog(
-                                  //     context: context,
-                                  //     builder: (context) => saveAlert(
-                                  //         accounts[index].name!,
-                                  //         accounts[index].uid!,
-                                  //         accounts[index].email!,
-                                  //         accounts[index].password!,
-                                  //         accounts[index].providerId!,
-                                  //         accounts[index].accessToken!,
-                                  //         accounts[index].idToken!));
+                                onPressed: () async {
+                                  String model =
+                                      await getModel(monument[index].name!);
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => saveAlert(
+                                            monument[index].name!,
+                                            model,
+                                            monument[index].image!,
+                                          ));
                                 },
                                 icon: Icon(
                                   Icons.delete_sweep,
@@ -231,14 +235,23 @@ class _ManageMonumentsState extends State<ManageMonuments> {
                                 ),
                               ),
                               IconButton(
-                                onPressed: () {
-                                  // Navigator.of(context).push(MaterialPageRoute(
-                                  //     builder: (context) => ConsultAccount(
-                                  //         image: accounts[index].image!,
-                                  //         name: accounts[index].name!,
-                                  //         gender: accounts[index].gender!,
-                                  //         email: accounts[index].email!,
-                                  //         pass: accounts[index].password!)));
+                                onPressed: () async {
+                                  String model =
+                                      await getModel(monument[index].name!);
+                                  showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return UpdateMonument(
+                                          name: monument[index].name,
+                                          image: monument[index].image,
+                                          location: monument[index].location,
+                                          region: monument[index].region,
+                                          info: monument[index].info,
+                                          url: monument[index].url,
+                                          model: model,
+                                        );
+                                      });
                                 },
                                 icon: Icon(
                                   Icons.edit_note,
@@ -258,7 +271,38 @@ class _ManageMonumentsState extends State<ManageMonuments> {
           }),
     );
   }
-  
+
+  Future<String> getModel(String name) async {
+    final doc = await FirebaseFirestore.instance
+        .collection('ar_models')
+        .doc('ar_models')
+        .get();
+    final data = doc.data();
+    List models = doc['ar_models'];
+    String model = '';
+    for (var i = 0; i < models.length; i++) {
+      if (models[i]['name'] == name) {
+        model = models[i]['models'];
+        break;
+      }
+    }
+    return model;
+  }
+
+  Future deleteModel(String name, String model, String image) async {
+    var data = [
+      {
+        'image': image,
+        'models': model,
+        'name': name,
+      }
+    ];
+    await FirebaseFirestore.instance
+        .collection('ar_models')
+        .doc('ar_models')
+        .update({'ar_models': FieldValue.arrayRemove(data)});
+  }
+
   ImageProvider getImage(String image) {
     if (image == null) {
       return AssetImage('assets/img/avatar.png');
@@ -266,16 +310,127 @@ class _ManageMonumentsState extends State<ManageMonuments> {
       return AssetImage(image);
     } else {
       return NetworkImage(image);
-    } 
+    }
   }
 
-  openDilog(){
+  openDilog() {
     return showDialog(
-      barrierDismissible: false,
-      context: context, 
-      builder: (context){
-        return AddMonument();
-      }
-    );
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AddMonument(
+            region: widget.region,
+          );
+        });
+  }
+
+  Widget saveAlert(String name, String model, String image) {
+    return Dialog(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.topCenter,
+          children: [
+            Container(
+              height: 240,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 65, 10, 10),
+                child: Column(
+                  children: [
+                    Text(
+                      'Delete Monument',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 19,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Would you really want to delete $name?',
+                      style: TextStyle(fontSize: 18),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: Colors.black45),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              primary: Colors.grey[600],
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ManageMonuments(
+                                        region: widget.region,
+                                      )));
+                            },
+                            child: Text(
+                              'CANCEL',
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  letterSpacing: 2.2,
+                                  color: Colors.black87),
+                            )),
+                        ElevatedButton(
+                          style: OutlinedButton.styleFrom(
+                            primary: Colors.grey[600],
+                            backgroundColor: AppColors.mainColor,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 35, vertical: 12),
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                          ),
+                          onPressed: () async {
+                            deleteModel(name, model, image);
+                            await FirebaseFirestore.instance
+                                .collection(
+                                    widget.region!.trim() + '_monuments')
+                                .doc(name.trim().replaceAll(' ', ''))
+                                .delete();
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ManageMonuments(
+                                      region: widget.region,
+                                    )));
+                          },
+                          child: Text(
+                            "DELETE",
+                            style: TextStyle(
+                                fontSize: 15,
+                                letterSpacing: 2.2,
+                                color: Colors.white),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+                top: -35,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 40,
+                  child: Lottie.asset(
+                    'assets/animations/warning.json',
+                    fit: BoxFit.cover,
+                    repeat: false,
+                  ),
+                )),
+          ],
+        ));
   }
 }

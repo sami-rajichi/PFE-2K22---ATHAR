@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:monumento/components/admin_dashboard/monuments/manage_monuments.dart';
 import 'package:monumento/components/admin_dashboard/monuments/monument_page.dart';
 import 'package:monumento/components/profile/specific_monument.dart';
 import 'package:monumento/constants/colors.dart';
@@ -17,26 +18,36 @@ import 'package:reactive_dropdown_search/reactive_dropdown_search.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:shimmer/shimmer.dart';
 
-class AddMonument extends StatefulWidget {
+class UpdateMonument extends StatefulWidget {
+  final String? name;
+  final String? info;
+  final String? location;
+  final String? image;
   final String? region;
-  const AddMonument({Key? key, this.region}) : super(key: key);
+  final String? model;
+  final String? url;
+  const UpdateMonument(
+      {Key? key,
+      this.name,
+      this.info,
+      this.location,
+      this.image,
+      this.region,
+      this.model,
+      this.url})
+      : super(key: key);
 
   @override
-  State<AddMonument> createState() => _AddMonumentState();
+  State<UpdateMonument> createState() => _UpdateMonumentState();
 }
 
-class _AddMonumentState extends State<AddMonument> {
+class _UpdateMonumentState extends State<UpdateMonument> {
   TextEditingController nameController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController descController = TextEditingController();
   TextEditingController urlController = TextEditingController();
   FirebaseServices firebaseServices = new FirebaseServices();
   bool loading = false;
-  final pickedColor = Colors.green;
-  final unselectedColor = AppColors.backgroundColor.withOpacity(.5);
-  final pickedColor2 = Colors.green;
-  final unselectedColor2 = AppColors.backgroundColor.withOpacity(.5);
-  final unselectedErrorColor = Colors.red;
   bool isError = false;
   bool isError2 = false;
   bool isError3 = false;
@@ -46,6 +57,9 @@ class _AddMonumentState extends State<AddMonument> {
   bool isError8 = false;
   String image = '';
   String model = '';
+  String oImage = '';
+  String oModel = '';
+  String oName = '';
   String region = '';
   bool fromCloud = false;
   bool fromCloud2 = false;
@@ -53,7 +67,16 @@ class _AddMonumentState extends State<AddMonument> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      nameController.text = widget.name!;
+      locationController.text = widget.location!;
+      descController.text = widget.info!;
+      urlController.text = widget.url!;
+      image = widget.image!;
+      model = widget.model!;
       region = widget.region!;
+      oImage = widget.image!;
+      oName = widget.name!;
+      oModel = widget.model!;
     });
     nameController.addListener(() {
       setState(() {});
@@ -129,7 +152,7 @@ class _AddMonumentState extends State<AddMonument> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10.0),
                       child: Transform.translate(
-                        offset: Offset(-7, 0),
+                        offset: Offset(0, 0),
                         child: Text(
                           '*Required',
                           style: GoogleFonts.inter(
@@ -460,7 +483,7 @@ class _AddMonumentState extends State<AddMonument> {
                   child: Transform.translate(
                     offset: Offset(0, 5),
                     child: Text(
-                      'Model uploaded successfully',
+                      'Model is uploaded',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.inter(
@@ -552,7 +575,9 @@ class _AddMonumentState extends State<AddMonument> {
                             primary: Colors.grey[600],
                           ),
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => ManageMonuments(region: region))
+                            );
                           },
                           child: Text('GO BACK',
                               style: GoogleFonts.inter(
@@ -579,7 +604,7 @@ class _AddMonumentState extends State<AddMonument> {
                           onPressed: () {
                             validateForm();
                           },
-                          child: Text('ADD',
+                          child: Text('UPDATE',
                               style: GoogleFonts.inter(
                                 fontSize: 15.0,
                                 color: Colors.white,
@@ -607,7 +632,7 @@ class _AddMonumentState extends State<AddMonument> {
           ),
           children: [
             TextSpan(
-              text: 'ADD',
+              text: 'UPDATE',
               style: TextStyle(
                   fontWeight: FontWeight.w500, color: AppColors.mainColor),
             ),
@@ -703,6 +728,10 @@ class _AddMonumentState extends State<AddMonument> {
         loading = true;
       });
       await FirebaseFirestore.instance
+          .collection(widget.region!.trim() + '_monuments')
+          .doc(widget.name!.trim().replaceAll(' ', ''))
+          .delete();
+      await FirebaseFirestore.instance
           .collection(region.trim() + '_monuments')
           .doc(nameController.text.trim().replaceAll(' ', ''))
           .set({
@@ -713,7 +742,14 @@ class _AddMonumentState extends State<AddMonument> {
         'region': region,
         'url': urlController.text
       });
-      var data = [
+      var oData = [
+        {
+          'image': widget.image,
+          'models': widget.model,
+          'name': widget.name,
+        }
+      ];
+      var newData = [
         {
           'image': image,
           'models': model,
@@ -723,7 +759,11 @@ class _AddMonumentState extends State<AddMonument> {
       await FirebaseFirestore.instance
           .collection('ar_models')
           .doc('ar_models')
-          .update({'ar_models': FieldValue.arrayUnion(data)});
+          .update({'ar_models': FieldValue.arrayRemove(oData)});
+      await FirebaseFirestore.instance
+          .collection('ar_models')
+          .doc('ar_models')
+          .update({'ar_models': FieldValue.arrayUnion(newData)});
       final doc = await FirebaseFirestore.instance
           .collection('ar_models')
           .doc('ar_models')

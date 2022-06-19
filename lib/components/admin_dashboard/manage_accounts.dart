@@ -120,7 +120,7 @@ class _ManageAccountsState extends State<ManageAccounts> {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Icon(
-                        Icons.edit_note,
+                        Icons.remove_red_eye,
                         color: Colors.white,
                         size: 32,
                       ),

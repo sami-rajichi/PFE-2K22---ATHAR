@@ -38,7 +38,7 @@ class _MonumentsHomepageState extends State<MonumentsHomepage> {
           'Monuments',
           style: TextStyle(color: AppColors.bigTextColor),
         ),
-        elevation: 3,
+        elevation: 2,
         backgroundColor: Colors.white,
         centerTitle: true,
       ),
