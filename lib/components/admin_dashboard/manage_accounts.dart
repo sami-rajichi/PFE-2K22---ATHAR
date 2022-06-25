@@ -296,29 +296,6 @@ class _ManageAccountsState extends State<ManageAccounts> {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
       final user = _auth.currentUser;
-      switch (providerId) {
-        case 'google.com':
-          AuthCredential credentials =
-          GoogleAuthProvider.credential(accessToken: accessToken, idToken: idToken);
-          final result = await user!.reauthenticateWithCredential(credentials);
-          await result.user!.delete();
-          await user.reload();
-          break;
-        case 'facebook.com':
-          OAuthCredential credentials =
-          FacebookAuthProvider.credential(accessToken);
-          final result = await user!.reauthenticateWithCredential(credentials);
-          await result.user!.delete();
-          await user.reload();
-          break;
-        default:
-          AuthCredential credentials =
-          EmailAuthProvider.credential(email: email, password: password);
-          final result = await user!.reauthenticateWithCredential(credentials);
-          await result.user!.delete();
-          await user.reload();
-      }
-
       await FirebaseFirestore.instance.collection('users').doc(uid).delete();
 
       final snackBar = SnackBar(

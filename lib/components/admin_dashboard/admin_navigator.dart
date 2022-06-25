@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:monumento/components/admin_dashboard/admin_homepage.dart';
 import 'package:monumento/components/admin_dashboard/admin_panel_menu.dart';
-import 'package:monumento/components/admin_dashboard/admin_ruins_navigator.dart';
 import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/components/categories/categories_home.dart';
 import 'package:monumento/components/changelog/changelog.dart';
@@ -56,10 +55,6 @@ class _AdminNavigatorState extends State<AdminNavigator> {
         return AdminHomepage(
           uid: FirebaseAuth.instance.currentUser!.uid,
           );
-      case AdminPanelMenu.ar:
-        return ArUs();
-      case AdminPanelMenu.category:
-        return HomeCategories();
       case AdminPanelMenu.update:
         return ChangeLogScreen();
     }

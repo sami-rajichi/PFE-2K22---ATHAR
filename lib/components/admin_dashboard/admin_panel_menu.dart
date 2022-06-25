@@ -3,14 +3,10 @@ import 'package:monumento/models/menu_item.dart';
 
 class AdminPanelMenu {
   static const dashboard = MI('Dashboard', Icons.dashboard);
-  static const ar = MI('Camera', Icons.camera);
-  static const category = MI('Archeological Sites', Icons.account_balance_rounded);
   static const update = MI('Changelog', Icons.update_rounded);
 
   static const all = <MI>[
     dashboard,
-    ar,
-    category,
     update,
   ];
 }

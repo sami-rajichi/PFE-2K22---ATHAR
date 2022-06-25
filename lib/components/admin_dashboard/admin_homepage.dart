@@ -9,9 +9,8 @@ import 'package:focused_menu/modals.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
-import 'package:monumento/components/admin_dashboard/admin_ruins_navigator.dart';
+import 'package:monumento/components/admin_dashboard/dashboard_in_numbers.dart';
 import 'package:monumento/components/admin_dashboard/manage_accounts.dart';
-import 'package:monumento/components/admin_dashboard/models/manage_models.dart';
 import 'package:monumento/components/admin_dashboard/monuments/monuments_homepage.dart';
 import 'package:monumento/components/admin_dashboard/requests/consult_rquest.dart';
 import 'package:monumento/components/admin_dashboard/requests/manage_requests.dart';
@@ -32,6 +31,7 @@ class AdminHomepage extends StatefulWidget {
 }
 
 class _AdminHomepageState extends State<AdminHomepage> {
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -62,88 +62,99 @@ class _AdminHomepageState extends State<AdminHomepage> {
                       child: showNotifications(),
                     )
                   ]),
-              body: Stack(
-                children: [
-                  SizedBox(
-                    height: double.infinity,
-                  ),
-                  Container(
-                    height: 180,
-                    width: size.height,
-                    decoration: BoxDecoration(
-                        color: AppColors.mainColor,
-                        borderRadius: BorderRadius.only(
-                            bottomRight: Radius.circular(40),
-                            bottomLeft: Radius.circular(40))),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Expanded(
-                          child: GridView.count(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            primary: false,
+              backgroundColor: AppColors.backgroundColor,
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      height: 180,
+                      width: size.width,
+                      decoration: BoxDecoration(
+                          color: AppColors.mainColor,
+                          borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(40),
+                              bottomLeft: Radius.circular(40))),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Transform.translate(
+                        offset: Offset(0, -100),
+                        child: Container(
+                          height: 720,
+                          child: ListView(
+                            shrinkWrap: true,
+                            physics: BouncingScrollPhysics(),
+                            padding: EdgeInsets.all(0),
                             children: [
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => EditProfile(
-                                                image: d['image'],
-                                                name: d['name'],
-                                                gender: d['gender'],
-                                                email: d['email'],
-                                                pass: d['password'])));
-                                  },
-                                  child: _card(d['image'], 'Profile')),
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                MonumentsHomepage()));
-                                  },
-                                  child: _card(
-                                      'assets/img/ruins.png', 'Monuments')),
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ManageAccounts()));
-                                  },
-                                  child: _card(
-                                      'assets/img/accounts.png', 'Accounts')),
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                RequestsHome()));
-                                  },
-                                  child: _card(
-                                      'assets/img/requests.png', 'Issues')),
-                              GestureDetector(
-                                  onTap: () async {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) => saveAlert());
-                                  },
-                                  child:
-                                      _card('assets/img/logout.png', 'Logout')),
+                              DashboardInNumbers(),
+                              SizedBox(
+                                height: 590,
+                                child: GridView.count(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 10,
+                                  primary: true,
+                                  children: [
+                                    GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) => EditProfile(
+                                                      image: d['image'],
+                                                      name: d['name'],
+                                                      gender: d['gender'],
+                                                      email: d['email'],
+                                                      pass: d['password'])));
+                                        },
+                                        child: _card(d['image'], 'Profile')),
+                                    GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MonumentsHomepage()));
+                                        },
+                                        child: _card(
+                                            'assets/img/ruins.png', 'Monuments')),
+                                    GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ManageAccounts()));
+                                        },
+                                        child: _card(
+                                            'assets/img/accounts.png', 'Accounts')),
+                                    GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RequestsHome()));
+                                        },
+                                        child: _card(
+                                            'assets/img/requests.png', 'Issues')),
+                                    GestureDetector(
+                                        onTap: () async {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) => saveAlert());
+                                        },
+                                        child:
+                                            _card('assets/img/logout.png', 'Logout')),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  )
-                ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             );
           } else {

@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:monumento/components/admin_dashboard/admin_ruins_navigator.dart';
 import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/components/categories/ruins_home_navigator.dart';
 import 'package:monumento/constants/colors.dart';
@@ -142,10 +141,7 @@ class _HomeCategoriesState extends State<HomeCategories> {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => ArUs()));
           } else if (i == 2) {
-            FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser!.email == 'admin-athar@gmail.com'
-            ? Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => AdminRuinsNavigator()))
-            : Navigator.of(context)
+            Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => RuinsNavigator()));
             } else {
             Navigator.of(context).push(
