@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:monumento/components/admin_dashboard/admin_homepage.dart';
 import 'package:monumento/components/admin_dashboard/admin_navigator.dart';
+import 'package:monumento/components/ar/AR_camera_navigator.dart';
 import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/components/categories/categories_home.dart';
 import 'package:monumento/components/categories/ruins_home_navigator.dart';
@@ -318,7 +319,7 @@ class _HomeState extends State<Home> {
               icon: Icon(
                 Icons.camera_alt_rounded,
               ),
-              label: 'Camera'),
+              label: 'AR Camera'),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.home_filled,
@@ -334,7 +335,7 @@ class _HomeState extends State<Home> {
         onTap: (int i) {
           if (i == 0) {
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => ArUs()));
+                .push(MaterialPageRoute(builder: (context) => ARcameraNavigator()));
           } else if (i == 2) {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => RuinsNavigator()));

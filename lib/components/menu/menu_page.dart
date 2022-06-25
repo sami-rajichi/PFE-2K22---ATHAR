@@ -4,7 +4,7 @@ import 'package:monumento/models/menu_item.dart';
 
 class MenuItems {
   static const home = MI('Home', Icons.home);
-  static const ar = MI('Camera', Icons.camera);
+  static const ar = MI('AR Camera', Icons.camera);
   static const category = MI('Archeological Sites', Icons.account_balance_rounded);
   static const arModels = MI('3D Models', Icons.category);
   static const requestHelp = MI('Report Issue', Icons.assistant);

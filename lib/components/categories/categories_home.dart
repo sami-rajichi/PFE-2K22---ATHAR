@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:monumento/components/ar/AR_camera_navigator.dart';
 import 'package:monumento/components/ar/arUs.dart';
 import 'package:monumento/components/categories/ruins_home_navigator.dart';
 import 'package:monumento/constants/colors.dart';
@@ -30,7 +31,7 @@ class _HomeCategoriesState extends State<HomeCategories> {
             color: AppColors.mainColor,
           ),
           title: Text(
-            'Monumento',
+            'aThAR',
             style: TextStyle(color: AppColors.mainColor),
           ),
           elevation: 3,
@@ -123,7 +124,7 @@ class _HomeCategoriesState extends State<HomeCategories> {
               icon: Icon(
                 Icons.camera_alt_rounded,
               ),
-              label: 'Camera'),
+              label: 'AR Camera'),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.home_filled,
@@ -139,7 +140,7 @@ class _HomeCategoriesState extends State<HomeCategories> {
         onTap: (int i) {
           if (i == 0) {
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => ArUs()));
+                .push(MaterialPageRoute(builder: (context) => ARcameraNavigator()));
           } else if (i == 2) {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => RuinsNavigator()));
