@@ -42,7 +42,7 @@ class _HowToUseState extends State<HowToUse> {
                             ),
                           ),
                           Text(
-                            'Map Feature',
+                            'AR Virtual Guide',
                             style: TextStyle(
                                 fontSize: 18, color: AppColors.bigTextColor),
                           ),
@@ -55,7 +55,36 @@ class _HowToUseState extends State<HowToUse> {
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
                                       AppColors.mainColor)),
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Dialog(
+                                        child: ListView(
+                                          children: [
+                                            Image.asset(
+                                              'assets/img/ss.jpg',
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.9,
+                                              width: double.infinity,
+                                              fit: BoxFit.fill,
+                                            ),
+                                            Image.asset(
+                                              'assets/img/ss.jpg',
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.9,
+                                              width: double.infinity,
+                                              fit: BoxFit.fill,
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    });
+                              },
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -90,7 +119,7 @@ class _HowToUseState extends State<HowToUse> {
                             ),
                           ),
                           Text(
-                            'AR Feature',
+                            'AR Reconstruction',
                             style: TextStyle(
                                 fontSize: 18, color: AppColors.bigTextColor),
                           ),
@@ -103,7 +132,36 @@ class _HowToUseState extends State<HowToUse> {
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
                                       AppColors.mainColor)),
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Dialog(
+                                        child: ListView(
+                                          children: [
+                                            Image.asset(
+                                              'assets/img/ss.jpg',
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.9,
+                                              width: double.infinity,
+                                              fit: BoxFit.fill,
+                                            ),
+                                            Image.asset(
+                                              'assets/img/ss.jpg',
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.9,
+                                              width: double.infinity,
+                                              fit: BoxFit.fill,
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    });
+                              },
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,

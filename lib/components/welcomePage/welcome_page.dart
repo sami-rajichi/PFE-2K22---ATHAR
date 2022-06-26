@@ -14,9 +14,19 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   List images = [
-    "eljem_splash_1.png",
-    "eljem_splash_1.png",
-    "eljem_splash_1.png",
+    "el jem vector.png",
+    "Zaghouan_aqueduc vector.png",
+    "matmata vector.png",
+  ];
+  List features = [
+    "Because the 3D Visualization feature",
+    "Because the AR Reconstruction feature",
+    "Because the AR Virtual Guide feature",
+  ];
+  List descriptions = [
+    "Let's you discover the 3D presentations of the archeological sites",
+    "Let's you immerse the 3D models into the real environment, and gives the illusion of a perfect integration to you",
+    "Let's you unleash the experience up a notch with the new way of presenting the tourism guide",
   ];
   @override
   Widget build(BuildContext context) {
@@ -25,73 +35,85 @@ class _WelcomePageState extends State<WelcomePage> {
           scrollDirection: Axis.vertical,
           itemCount: images.length,
           itemBuilder: (_, index) {
-            return Container(
-              height: double.maxFinite,
-              width: double.maxFinite,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(
-                        "assets/img/" + images[index],
-                      ),
-                      fit: BoxFit.fill)),
-              child: Container(
-                margin: const EdgeInsets.only(top: 150, left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppLargeText(text: "Welcome"),
-                        SizedBox(height: 5),
-                        AppText(
-                          text: "To Monumento",
-                          size: 30,
-                        ),
-                        SizedBox(height: 20),
-                        Container(
-                          width: 250,
-                          child: AppText(
-                            text:
-                                "reconstruction photogrammétrique 3D, simplification 3D, visualisation AR. La base de connaissances applicable aux sites archéologiques est également décrite ici.",
-                            size: 15.5,
+            return Stack(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 150, left: 20, right: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppLargeText(text: "Explore ATHAR"),
+                          SizedBox(height: 12),
+                          AppText(
+                            text: features[index],
+                            size: 19,
                           ),
-                        ),
-                        SizedBox(height: 40),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context, 
-                              MaterialPageRoute(
-                                builder: (context) => NavigationDrawer()));
-                          },
-                          child: ResponsiveButton(
-                            width: 120,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: List.generate(
-                        images.length,
-                        (indexDots) {
-                          return Container(
-                            margin: EdgeInsets.only(bottom: 5),
-                            width: 8,
-                            height: index == indexDots ? 25 : 8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: index == indexDots
-                                  ? AppColors.mainColor
-                                  : AppColors.mainColor.withOpacity(0.5),
+                          SizedBox(height: 20),
+                          Container(
+                            width: 250,
+                            child: Text(
+                              descriptions[index],
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(
+                                  fontSize: 15.5,
+                                  color:
+                                      AppColors.bigTextColor.withOpacity(0.6)),
                             ),
-                          );
-                        },
+                          ),
+                          SizedBox(height: 40),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          NavigationDrawer()));
+                            },
+                            child: ResponsiveButton(
+                              width: 120,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      Column(
+                        children: List.generate(
+                          images.length,
+                          (indexDots) {
+                            return Container(
+                              margin: EdgeInsets.only(bottom: 5),
+                              width: 8,
+                              height: index == indexDots ? 25 : 8,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: index == indexDots
+                                    ? AppColors.mainColor
+                                    : AppColors.mainColor.withOpacity(0.5),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: double.infinity,
+                    height: index == 0
+                    ? 430
+                    : index == 1 ? 395 : 435,
+                    child: Image.asset(
+                      "assets/img/" + images[index],
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )
+              ],
             );
           }),
     );

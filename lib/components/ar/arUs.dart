@@ -75,33 +75,38 @@ class _ArUsState extends State<ArUs> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FloatingActionButton.extended(
-                      heroTag: 'btn1',
-                      foregroundColor: Colors.white,
-                      backgroundColor: AppColors.mainColor,
-                      onPressed: () async {
-                        List<Application> apps =
-                            await DeviceApps.getInstalledApplications();
-                        for (Application app in apps) {
-                          print(app.packageName + '\n');
-                        }
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return const RoadmapScreen();
-                        }));
-                      },
-                      label: Text('AR Virtual Guide')),
-                  FloatingActionButton.extended(
-                      heroTag: 'btn2',
-                      foregroundColor: Colors.white,
-                      backgroundColor: AppColors.mainColor,
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return const RuinScreen();
-                        }));
-                      },
-                      label: Text('AR Reconstruction'))
+                  Expanded(
+                    child: FloatingActionButton.extended(
+                        heroTag: 'btn1',
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.mainColor,
+                        onPressed: () async {
+                          List<Application> apps =
+                              await DeviceApps.getInstalledApplications();
+                          for (Application app in apps) {
+                            print(app.packageName + '\n');
+                          }
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return const RoadmapScreen();
+                          }));
+                        },
+                        label: Text('AR Virtual Guide')),
+                  ),
+                  SizedBox(width: 16,),
+                  Expanded(
+                    child: FloatingActionButton.extended(
+                        heroTag: 'btn2',
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.mainColor,
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return const RuinScreen();
+                          }));
+                        },
+                        label: Text('AR Reconstruction')),
+                  )
                 ],
               ),
               Hero(
@@ -186,7 +191,7 @@ class _RoadmapScreenState extends State<RoadmapScreen> {
   @override
   void initState() {
     Timer(const Duration(milliseconds: 2200), (() {
-      DeviceApps.openApp('com.pfe.testOne');
+      DeviceApps.openApp('com.DefaultCompany.CustomRoutes');
       Navigator.pop(context);
     }));
     super.initState();
@@ -247,7 +252,7 @@ class _RuinScreenState extends State<RuinScreen> {
   @override
   void initState() {
     Timer(const Duration(milliseconds: 2200), (() {
-      DeviceApps.openApp('com.pfe.testOne');
+      DeviceApps.openApp('com.DefaultCompany.gps');
       Navigator.pop(context);
     }));
     super.initState();
