@@ -63,7 +63,7 @@ class _HowToUseState extends State<HowToUse> {
                                         child: ListView(
                                           children: [
                                             Image.asset(
-                                              'assets/img/ss.jpg',
+                                              'assets/img/1.1.png',
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
@@ -72,7 +72,7 @@ class _HowToUseState extends State<HowToUse> {
                                               fit: BoxFit.fill,
                                             ),
                                             Image.asset(
-                                              'assets/img/ss.jpg',
+                                              'assets/img/1.2.png',
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
@@ -140,7 +140,7 @@ class _HowToUseState extends State<HowToUse> {
                                         child: ListView(
                                           children: [
                                             Image.asset(
-                                              'assets/img/ss.jpg',
+                                              'assets/img/1.1.png',
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
@@ -149,7 +149,7 @@ class _HowToUseState extends State<HowToUse> {
                                               fit: BoxFit.fill,
                                             ),
                                             Image.asset(
-                                              'assets/img/ss.jpg',
+                                              'assets/img/2.2.png',
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
